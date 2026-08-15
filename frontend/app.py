@@ -5,18 +5,18 @@ from dash_extensions.javascript import assign
 import json
 import geopandas as gpd
 import pandas as pd
+import os
+from pathlib import Path
 
 #--------------------------------------------------
 # Load data
 #--------------------------------------------------
-constituency_sf = gpd.read_file(
-    r"C:\Users\natay\Documents\GE explore\Westminster_Parliamentary_Constituencies_July_2024_Boundaries_UK_BUC_2210534386407638194\PCON_JULY_2024_UK_BUC.shp"
-).to_crs(epsg=4326)
+BASE_DIR = Path(__file__).parent
+shapefile_path = BASE_DIR / "data" / "Westminster_Parliamentary_Constituencies_July_2024_Boundaries_UK_BUC_2210534386407638194" /"PCON_JULY_2024_UK_BUC.shp"
+predictions_path = BASE_DIR / "data" / "uk_election_predictions.xlsx"
 
-predictions = pd.read_excel(
-    r"C:\Users\natay\Documents\GE explore\general_election_predictions\frontend\data\uk_election_predictions.xlsx",
-    sheet_name = "predictions"
-)
+constituency_sf = gpd.read_file(shapefile_path).to_crs(epsg=4326)
+predictions = pd.read_excel(predictions_path)
 
 map_data = constituency_sf.merge(
     predictions,
