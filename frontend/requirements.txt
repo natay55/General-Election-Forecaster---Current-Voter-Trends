@@ -1,8 +1,8 @@
-dash
-dash-leaflet
-dash-extensions
-plotly
-pandas
-geopandas
-openpyxl
-shapely
+dash==2.18.1
+dash-leaflet==1.0.15
+dash-extensions==1.0.18
+plotly==5.22.0
+pandas==2.2.2
+geopandas==0.14.4
+openpyxl==3.1.2
+shapely==2.0.4
