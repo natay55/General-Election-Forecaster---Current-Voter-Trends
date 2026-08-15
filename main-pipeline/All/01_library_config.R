@@ -1,0 +1,22 @@
+
+#Define all the relevant libraries to be used throughout the code
+
+library(rvest)
+library(dplyr)
+library(tidyverse)
+library(rstan)
+library(bayesplot)
+library(haven)
+library(lme4)
+library(readxl)
+library(nomisr)
+library(readr)
+library(janitor)
+library(sf)
+library(spdep)
+library(jsonlite)
+library(stringi)
+library(here)
+library(stringi)
+library(readr)
+library(writexl)

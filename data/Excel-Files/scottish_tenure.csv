@@ -1,0 +1,646 @@
+SuperWEB2(tm),,,
+,,,
+Census 2022-Household-2Ev1,,,
+Scotland's Census 2022 - National Records of Scotland Table UV404 - Household tenure - Households All occupied households,,,
+United Kingdom Parliamentary Constituency 2024 by Household Tenure,,,
+Counting: Households,,,
+,,,
+Filters:,,,
+Default Summation,Households,,
+,,,
+Counting,United Kingdom Parliamentary Constituency 2024,Household Tenure,Count
+Households,East Renfrewshire,All occupied households,39732
+Households,East Renfrewshire,Owned: Total,32819
+Households,East Renfrewshire,Owned: Owned outright,17721
+Households,East Renfrewshire,Owned: Owned with a mortgage or loan,14911
+Households,East Renfrewshire,Owned: Shared ownership (part owned and part rented),42
+Households,East Renfrewshire,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),150
+Households,East Renfrewshire,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,4275
+Households,East Renfrewshire,Private rented: Total,2280
+Households,East Renfrewshire,Private rented: Private landlord or letting agency,2177
+Households,East Renfrewshire,Private rented: Other,104
+Households,East Renfrewshire,Lives Rent Free,351
+Households,Na h-Eileanan an Iar,All occupied households,12717
+Households,Na h-Eileanan an Iar,Owned: Total,9459
+Households,Na h-Eileanan an Iar,Owned: Owned outright,6646
+Households,Na h-Eileanan an Iar,Owned: Owned with a mortgage or loan,2711
+Households,Na h-Eileanan an Iar,Owned: Shared ownership (part owned and part rented),18
+Households,Na h-Eileanan an Iar,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),83
+Households,Na h-Eileanan an Iar,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,2178
+Households,Na h-Eileanan an Iar,Private rented: Total,726
+Households,Na h-Eileanan an Iar,Private rented: Private landlord or letting agency,677
+Households,Na h-Eileanan an Iar,Private rented: Other,49
+Households,Na h-Eileanan an Iar,Lives Rent Free,355
+Households,Midlothian,All occupied households,41009
+Households,Midlothian,Owned: Total,28014
+Households,Midlothian,Owned: Owned outright,13075
+Households,Midlothian,Owned: Owned with a mortgage or loan,14372
+Households,Midlothian,Owned: Shared ownership (part owned and part rented),67
+Households,Midlothian,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),501
+Households,Midlothian,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9446
+Households,Midlothian,Private rented: Total,3146
+Households,Midlothian,Private rented: Private landlord or letting agency,2900
+Households,Midlothian,Private rented: Other,246
+Households,Midlothian,Lives Rent Free,403
+Households,North Ayrshire and Arran,All occupied households,44516
+Households,North Ayrshire and Arran,Owned: Total,28710
+Households,North Ayrshire and Arran,Owned: Owned outright,17361
+Households,North Ayrshire and Arran,Owned: Owned with a mortgage or loan,11191
+Households,North Ayrshire and Arran,Owned: Shared ownership (part owned and part rented),53
+Households,North Ayrshire and Arran,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),101
+Households,North Ayrshire and Arran,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10931
+Households,North Ayrshire and Arran,Private rented: Total,4279
+Households,North Ayrshire and Arran,Private rented: Private landlord or letting agency,4124
+Households,North Ayrshire and Arran,Private rented: Other,155
+Households,North Ayrshire and Arran,Lives Rent Free,596
+Households,Orkney and Shetland,All occupied households,21204
+Households,Orkney and Shetland,Owned: Total,14643
+Households,Orkney and Shetland,Owned: Owned outright,9537
+Households,Orkney and Shetland,Owned: Owned with a mortgage or loan,4848
+Households,Orkney and Shetland,Owned: Shared ownership (part owned and part rented),169
+Households,Orkney and Shetland,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),86
+Households,Orkney and Shetland,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,4201
+Households,Orkney and Shetland,Private rented: Total,1759
+Households,Orkney and Shetland,Private rented: Private landlord or letting agency,1654
+Households,Orkney and Shetland,Private rented: Other,109
+Households,Orkney and Shetland,Lives Rent Free,601
+Households,Aberdeen North,All occupied households,53821
+Households,Aberdeen North,Owned: Total,30460
+Households,Aberdeen North,Owned: Owned outright,15186
+Households,Aberdeen North,Owned: Owned with a mortgage or loan,14555
+Households,Aberdeen North,Owned: Shared ownership (part owned and part rented),247
+Households,Aberdeen North,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),476
+Households,Aberdeen North,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,15236
+Households,Aberdeen North,Private rented: Total,7467
+Households,Aberdeen North,Private rented: Private landlord or letting agency,7255
+Households,Aberdeen North,Private rented: Other,212
+Households,Aberdeen North,Lives Rent Free,654
+Households,Aberdeen South,All occupied households,55629
+Households,Aberdeen South,Owned: Total,31340
+Households,Aberdeen South,Owned: Owned outright,16181
+Households,Aberdeen South,Owned: Owned with a mortgage or loan,14653
+Households,Aberdeen South,Owned: Shared ownership (part owned and part rented),211
+Households,Aberdeen South,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),295
+Households,Aberdeen South,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9273
+Households,Aberdeen South,Private rented: Total,14241
+Households,Aberdeen South,Private rented: Private landlord or letting agency,14021
+Households,Aberdeen South,Private rented: Other,222
+Households,Aberdeen South,Lives Rent Free,775
+Households,Aberdeenshire North and Moray East,All occupied households,45246
+Households,Aberdeenshire North and Moray East,Owned: Total,30621
+Households,Aberdeenshire North and Moray East,Owned: Owned outright,18302
+Households,Aberdeenshire North and Moray East,Owned: Owned with a mortgage or loan,12046
+Households,Aberdeenshire North and Moray East,Owned: Shared ownership (part owned and part rented),59
+Households,Aberdeenshire North and Moray East,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),214
+Households,Aberdeenshire North and Moray East,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10199
+Households,Aberdeenshire North and Moray East,Private rented: Total,3703
+Households,Aberdeenshire North and Moray East,Private rented: Private landlord or letting agency,3571
+Households,Aberdeenshire North and Moray East,Private rented: Other,131
+Households,Aberdeenshire North and Moray East,Lives Rent Free,723
+Households,Airdrie and Shotts,All occupied households,40790
+Households,Airdrie and Shotts,Owned: Total,25410
+Households,Airdrie and Shotts,Owned: Owned outright,12376
+Households,Airdrie and Shotts,Owned: Owned with a mortgage or loan,12825
+Households,Airdrie and Shotts,Owned: Shared ownership (part owned and part rented),37
+Households,Airdrie and Shotts,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),172
+Households,Airdrie and Shotts,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,11440
+Households,Airdrie and Shotts,Private rented: Total,3410
+Households,Airdrie and Shotts,Private rented: Private landlord or letting agency,3267
+Households,Airdrie and Shotts,Private rented: Other,143
+Households,Airdrie and Shotts,Lives Rent Free,533
+Households,Alloa and Grangemouth,All occupied households,43681
+Households,Alloa and Grangemouth,Owned: Total,28193
+Households,Alloa and Grangemouth,Owned: Owned outright,14594
+Households,Alloa and Grangemouth,Owned: Owned with a mortgage or loan,13335
+Households,Alloa and Grangemouth,Owned: Shared ownership (part owned and part rented),48
+Households,Alloa and Grangemouth,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),216
+Households,Alloa and Grangemouth,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,11293
+Households,Alloa and Grangemouth,Private rented: Total,3617
+Households,Alloa and Grangemouth,Private rented: Private landlord or letting agency,3445
+Households,Alloa and Grangemouth,Private rented: Other,168
+Households,Alloa and Grangemouth,Lives Rent Free,578
+Households,Angus and Perthshire Glens,All occupied households,46525
+Households,Angus and Perthshire Glens,Owned: Total,30772
+Households,Angus and Perthshire Glens,Owned: Owned outright,18988
+Households,Angus and Perthshire Glens,Owned: Owned with a mortgage or loan,11367
+Households,Angus and Perthshire Glens,Owned: Shared ownership (part owned and part rented),135
+Households,Angus and Perthshire Glens,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),277
+Households,Angus and Perthshire Glens,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,8408
+Households,Angus and Perthshire Glens,Private rented: Total,6236
+Households,Angus and Perthshire Glens,Private rented: Private landlord or letting agency,6025
+Households,Angus and Perthshire Glens,Private rented: Other,210
+Households,Angus and Perthshire Glens,Lives Rent Free,1110
+Households,Arbroath and Broughty Ferry,All occupied households,45808
+Households,Arbroath and Broughty Ferry,Owned: Total,31122
+Households,Arbroath and Broughty Ferry,Owned: Owned outright,17693
+Households,Arbroath and Broughty Ferry,Owned: Owned with a mortgage or loan,13111
+Households,Arbroath and Broughty Ferry,Owned: Shared ownership (part owned and part rented),93
+Households,Arbroath and Broughty Ferry,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),225
+Households,Arbroath and Broughty Ferry,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9268
+Households,Arbroath and Broughty Ferry,Private rented: Total,4828
+Households,Arbroath and Broughty Ferry,Private rented: Private landlord or letting agency,4624
+Households,Arbroath and Broughty Ferry,Private rented: Other,204
+Households,Arbroath and Broughty Ferry,Lives Rent Free,590
+Households,"Argyll, Bute and South Lochaber",All occupied households,44349
+Households,"Argyll, Bute and South Lochaber",Owned: Total,29887
+Households,"Argyll, Bute and South Lochaber",Owned: Owned outright,19607
+Households,"Argyll, Bute and South Lochaber",Owned: Owned with a mortgage or loan,10003
+Households,"Argyll, Bute and South Lochaber",Owned: Shared ownership (part owned and part rented),111
+Households,"Argyll, Bute and South Lochaber",Owned: Shared Equity (e.g. LIFT or Help-to-Buy),163
+Households,"Argyll, Bute and South Lochaber",Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,8438
+Households,"Argyll, Bute and South Lochaber",Private rented: Total,5085
+Households,"Argyll, Bute and South Lochaber",Private rented: Private landlord or letting agency,4559
+Households,"Argyll, Bute and South Lochaber",Private rented: Other,526
+Households,"Argyll, Bute and South Lochaber",Lives Rent Free,939
+Households,Bathgate and Linlithgow,All occupied households,42817
+Households,Bathgate and Linlithgow,Owned: Total,27847
+Households,Bathgate and Linlithgow,Owned: Owned outright,13165
+Households,Bathgate and Linlithgow,Owned: Owned with a mortgage or loan,14188
+Households,Bathgate and Linlithgow,Owned: Shared ownership (part owned and part rented),65
+Households,Bathgate and Linlithgow,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),428
+Households,Bathgate and Linlithgow,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10737
+Households,Bathgate and Linlithgow,Private rented: Total,3771
+Households,Bathgate and Linlithgow,Private rented: Private landlord or letting agency,3625
+Households,Bathgate and Linlithgow,Private rented: Other,139
+Households,Bathgate and Linlithgow,Lives Rent Free,469
+Households,"Caithness, Sutherland and Easter Ross",All occupied households,45541
+Households,"Caithness, Sutherland and Easter Ross",Owned: Total,31277
+Households,"Caithness, Sutherland and Easter Ross",Owned: Owned outright,20223
+Households,"Caithness, Sutherland and Easter Ross",Owned: Owned with a mortgage or loan,10573
+Households,"Caithness, Sutherland and Easter Ross",Owned: Shared ownership (part owned and part rented),86
+Households,"Caithness, Sutherland and Easter Ross",Owned: Shared Equity (e.g. LIFT or Help-to-Buy),395
+Households,"Caithness, Sutherland and Easter Ross",Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9123
+Households,"Caithness, Sutherland and Easter Ross",Private rented: Total,4075
+Households,"Caithness, Sutherland and Easter Ross",Private rented: Private landlord or letting agency,3892
+Households,"Caithness, Sutherland and Easter Ross",Private rented: Other,183
+Households,"Caithness, Sutherland and Easter Ross",Lives Rent Free,1064
+Households,Coatbridge and Bellshill,All occupied households,42252
+Households,Coatbridge and Bellshill,Owned: Total,25872
+Households,Coatbridge and Bellshill,Owned: Owned outright,11973
+Households,Coatbridge and Bellshill,Owned: Owned with a mortgage or loan,13662
+Households,Coatbridge and Bellshill,Owned: Shared ownership (part owned and part rented),46
+Households,Coatbridge and Bellshill,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),191
+Households,Coatbridge and Bellshill,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,12413
+Households,Coatbridge and Bellshill,Private rented: Total,3498
+Households,Coatbridge and Bellshill,Private rented: Private landlord or letting agency,3405
+Households,Coatbridge and Bellshill,Private rented: Other,93
+Households,Coatbridge and Bellshill,Lives Rent Free,469
+Households,Cowdenbeath and Kirkcaldy,All occupied households,44645
+Households,Cowdenbeath and Kirkcaldy,Owned: Total,29055
+Households,Cowdenbeath and Kirkcaldy,Owned: Owned outright,15725
+Households,Cowdenbeath and Kirkcaldy,Owned: Owned with a mortgage or loan,13018
+Households,Cowdenbeath and Kirkcaldy,Owned: Shared ownership (part owned and part rented),63
+Households,Cowdenbeath and Kirkcaldy,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),249
+Households,Cowdenbeath and Kirkcaldy,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10129
+Households,Cowdenbeath and Kirkcaldy,Private rented: Total,4876
+Households,Cowdenbeath and Kirkcaldy,Private rented: Private landlord or letting agency,4719
+Households,Cowdenbeath and Kirkcaldy,Private rented: Other,157
+Households,Cowdenbeath and Kirkcaldy,Lives Rent Free,585
+Households,Cumbernauld and Kirkintilloch,All occupied households,40584
+Households,Cumbernauld and Kirkintilloch,Owned: Total,27991
+Households,Cumbernauld and Kirkintilloch,Owned: Owned outright,13829
+Households,Cumbernauld and Kirkintilloch,Owned: Owned with a mortgage or loan,13837
+Households,Cumbernauld and Kirkintilloch,Owned: Shared ownership (part owned and part rented),39
+Households,Cumbernauld and Kirkintilloch,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),286
+Households,Cumbernauld and Kirkintilloch,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,8579
+Households,Cumbernauld and Kirkintilloch,Private rented: Total,3626
+Households,Cumbernauld and Kirkintilloch,Private rented: Private landlord or letting agency,3493
+Households,Cumbernauld and Kirkintilloch,Private rented: Other,133
+Households,Cumbernauld and Kirkintilloch,Lives Rent Free,391
+Households,Dumfries and Galloway,All occupied households,46707
+Households,Dumfries and Galloway,Owned: Total,30374
+Households,Dumfries and Galloway,Owned: Owned outright,20050
+Households,Dumfries and Galloway,Owned: Owned with a mortgage or loan,10008
+Households,Dumfries and Galloway,Owned: Shared ownership (part owned and part rented),139
+Households,Dumfries and Galloway,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),174
+Households,Dumfries and Galloway,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,8845
+Households,Dumfries and Galloway,Private rented: Total,6353
+Households,Dumfries and Galloway,Private rented: Private landlord or letting agency,6111
+Households,Dumfries and Galloway,Private rented: Other,239
+Households,Dumfries and Galloway,Lives Rent Free,1135
+Households,"Dumfriesshire, Clydesdale and Tweeddale",All occupied households,40997
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Owned: Total,27403
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Owned: Owned outright,17318
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Owned: Owned with a mortgage or loan,9873
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Owned: Shared ownership (part owned and part rented),82
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Owned: Shared Equity (e.g. LIFT or Help-to-Buy),128
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,7709
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Private rented: Total,4962
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Private rented: Private landlord or letting agency,4775
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Private rented: Other,187
+Households,"Dumfriesshire, Clydesdale and Tweeddale",Lives Rent Free,929
+Households,Dundee Central,All occupied households,50447
+Households,Dundee Central,Owned: Total,23301
+Households,Dundee Central,Owned: Owned outright,12298
+Households,Dundee Central,Owned: Owned with a mortgage or loan,10622
+Households,Dundee Central,Owned: Shared ownership (part owned and part rented),184
+Households,Dundee Central,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),201
+Households,Dundee Central,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,13969
+Households,Dundee Central,Private rented: Total,12630
+Households,Dundee Central,Private rented: Private landlord or letting agency,12365
+Households,Dundee Central,Private rented: Other,261
+Households,Dundee Central,Lives Rent Free,544
+Households,Dunfermline and Dollar,All occupied households,42688
+Households,Dunfermline and Dollar,Owned: Total,29951
+Households,Dunfermline and Dollar,Owned: Owned outright,14894
+Households,Dunfermline and Dollar,Owned: Owned with a mortgage or loan,14646
+Households,Dunfermline and Dollar,Owned: Shared ownership (part owned and part rented),142
+Households,Dunfermline and Dollar,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),269
+Households,Dunfermline and Dollar,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,7818
+Households,Dunfermline and Dollar,Private rented: Total,4497
+Households,Dunfermline and Dollar,Private rented: Private landlord or letting agency,4318
+Households,Dunfermline and Dollar,Private rented: Other,178
+Households,Dunfermline and Dollar,Lives Rent Free,422
+Households,East Kilbride and Strathaven,All occupied households,42774
+Households,East Kilbride and Strathaven,Owned: Total,31414
+Households,East Kilbride and Strathaven,Owned: Owned outright,15509
+Households,East Kilbride and Strathaven,Owned: Owned with a mortgage or loan,15681
+Households,East Kilbride and Strathaven,Owned: Shared ownership (part owned and part rented),33
+Households,East Kilbride and Strathaven,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),191
+Households,East Kilbride and Strathaven,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,6639
+Households,East Kilbride and Strathaven,Private rented: Total,4280
+Households,East Kilbride and Strathaven,Private rented: Private landlord or letting agency,4154
+Households,East Kilbride and Strathaven,Private rented: Other,128
+Households,East Kilbride and Strathaven,Lives Rent Free,440
+Households,Edinburgh East and Musselburgh,All occupied households,53227
+Households,Edinburgh East and Musselburgh,Owned: Total,28607
+Households,Edinburgh East and Musselburgh,Owned: Owned outright,13591
+Households,Edinburgh East and Musselburgh,Owned: Owned with a mortgage or loan,14168
+Households,Edinburgh East and Musselburgh,Owned: Shared ownership (part owned and part rented),290
+Households,Edinburgh East and Musselburgh,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),558
+Households,Edinburgh East and Musselburgh,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10771
+Households,Edinburgh East and Musselburgh,Private rented: Total,13276
+Households,Edinburgh East and Musselburgh,Private rented: Private landlord or letting agency,12959
+Households,Edinburgh East and Musselburgh,Private rented: Other,317
+Households,Edinburgh East and Musselburgh,Lives Rent Free,573
+Households,Edinburgh North and Leith,All occupied households,56682
+Households,Edinburgh North and Leith,Owned: Total,29247
+Households,Edinburgh North and Leith,Owned: Owned outright,13521
+Households,Edinburgh North and Leith,Owned: Owned with a mortgage or loan,15001
+Households,Edinburgh North and Leith,Owned: Shared ownership (part owned and part rented),267
+Households,Edinburgh North and Leith,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),456
+Households,Edinburgh North and Leith,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10204
+Households,Edinburgh North and Leith,Private rented: Total,16596
+Households,Edinburgh North and Leith,Private rented: Private landlord or letting agency,16313
+Households,Edinburgh North and Leith,Private rented: Other,283
+Households,Edinburgh North and Leith,Lives Rent Free,635
+Households,Edinburgh South,All occupied households,42786
+Households,Edinburgh South,Owned: Total,28794
+Households,Edinburgh South,Owned: Owned outright,15623
+Households,Edinburgh South,Owned: Owned with a mortgage or loan,12726
+Households,Edinburgh South,Owned: Shared ownership (part owned and part rented),162
+Households,Edinburgh South,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),283
+Households,Edinburgh South,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,4889
+Households,Edinburgh South,Private rented: Total,8601
+Households,Edinburgh South,Private rented: Private landlord or letting agency,8433
+Households,Edinburgh South,Private rented: Other,168
+Households,Edinburgh South,Lives Rent Free,502
+Households,Edinburgh South West,All occupied households,49162
+Households,Edinburgh South West,Owned: Total,27607
+Households,Edinburgh South West,Owned: Owned outright,13985
+Households,Edinburgh South West,Owned: Owned with a mortgage or loan,12908
+Households,Edinburgh South West,Owned: Shared ownership (part owned and part rented),262
+Households,Edinburgh South West,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),452
+Households,Edinburgh South West,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,8912
+Households,Edinburgh South West,Private rented: Total,12087
+Households,Edinburgh South West,Private rented: Private landlord or letting agency,11623
+Households,Edinburgh South West,Private rented: Other,464
+Households,Edinburgh South West,Lives Rent Free,556
+Households,Edinburgh West,All occupied households,44012
+Households,Edinburgh West,Owned: Total,33985
+Households,Edinburgh West,Owned: Owned outright,18053
+Households,Edinburgh West,Owned: Owned with a mortgage or loan,15477
+Households,Edinburgh West,Owned: Shared ownership (part owned and part rented),85
+Households,Edinburgh West,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),371
+Households,Edinburgh West,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,4117
+Households,Edinburgh West,Private rented: Total,5466
+Households,Edinburgh West,Private rented: Private landlord or letting agency,5336
+Households,Edinburgh West,Private rented: Other,127
+Households,Edinburgh West,Lives Rent Free,443
+Households,Falkirk,All occupied households,44112
+Households,Falkirk,Owned: Total,28463
+Households,Falkirk,Owned: Owned outright,14174
+Households,Falkirk,Owned: Owned with a mortgage or loan,13987
+Households,Falkirk,Owned: Shared ownership (part owned and part rented),84
+Households,Falkirk,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),218
+Households,Falkirk,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,11269
+Households,Falkirk,Private rented: Total,3801
+Households,Falkirk,Private rented: Private landlord or letting agency,3668
+Households,Falkirk,Private rented: Other,130
+Households,Falkirk,Lives Rent Free,582
+Households,Glasgow East,All occupied households,48401
+Households,Glasgow East,Owned: Total,21577
+Households,Glasgow East,Owned: Owned outright,9720
+Households,Glasgow East,Owned: Owned with a mortgage or loan,11241
+Households,Glasgow East,Owned: Shared ownership (part owned and part rented),255
+Households,Glasgow East,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),369
+Households,Glasgow East,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,18076
+Households,Glasgow East,Private rented: Total,8009
+Households,Glasgow East,Private rented: Private landlord or letting agency,7747
+Households,Glasgow East,Private rented: Other,259
+Households,Glasgow East,Lives Rent Free,738
+Households,Glasgow North,All occupied households,49545
+Households,Glasgow North,Owned: Total,19356
+Households,Glasgow North,Owned: Owned outright,9405
+Households,Glasgow North,Owned: Owned with a mortgage or loan,9565
+Households,Glasgow North,Owned: Shared ownership (part owned and part rented),198
+Households,Glasgow North,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),188
+Households,Glasgow North,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,17153
+Households,Glasgow North,Private rented: Total,12167
+Households,Glasgow North,Private rented: Private landlord or letting agency,11875
+Households,Glasgow North,Private rented: Other,288
+Households,Glasgow North,Lives Rent Free,868
+Households,Glasgow North East,All occupied households,50217
+Households,Glasgow North East,Owned: Total,19707
+Households,Glasgow North East,Owned: Owned outright,8819
+Households,Glasgow North East,Owned: Owned with a mortgage or loan,10412
+Households,Glasgow North East,Owned: Shared ownership (part owned and part rented),134
+Households,Glasgow North East,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),342
+Households,Glasgow North East,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,23322
+Households,Glasgow North East,Private rented: Total,6308
+Households,Glasgow North East,Private rented: Private landlord or letting agency,6108
+Households,Glasgow North East,Private rented: Other,203
+Households,Glasgow North East,Lives Rent Free,877
+Households,Glasgow South,All occupied households,45435
+Households,Glasgow South,Owned: Total,26044
+Households,Glasgow South,Owned: Owned outright,11536
+Households,Glasgow South,Owned: Owned with a mortgage or loan,14198
+Households,Glasgow South,Owned: Shared ownership (part owned and part rented),93
+Households,Glasgow South,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),217
+Households,Glasgow South,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,11288
+Households,Glasgow South,Private rented: Total,7529
+Households,Glasgow South,Private rented: Private landlord or letting agency,7337
+Households,Glasgow South,Private rented: Other,189
+Households,Glasgow South,Lives Rent Free,574
+Households,Glasgow South West,All occupied households,43154
+Households,Glasgow South West,Owned: Total,21868
+Households,Glasgow South West,Owned: Owned outright,10002
+Households,Glasgow South West,Owned: Owned with a mortgage or loan,11535
+Households,Glasgow South West,Owned: Shared ownership (part owned and part rented),111
+Households,Glasgow South West,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),220
+Households,Glasgow South West,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,14825
+Households,Glasgow South West,Private rented: Total,5784
+Households,Glasgow South West,Private rented: Private landlord or letting agency,5566
+Households,Glasgow South West,Private rented: Other,218
+Households,Glasgow South West,Lives Rent Free,677
+Households,Glasgow West,All occupied households,48825
+Households,Glasgow West,Owned: Total,23966
+Households,Glasgow West,Owned: Owned outright,11811
+Households,Glasgow West,Owned: Owned with a mortgage or loan,11893
+Households,Glasgow West,Owned: Shared ownership (part owned and part rented),155
+Households,Glasgow West,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),107
+Households,Glasgow West,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,15178
+Households,Glasgow West,Private rented: Total,9011
+Households,Glasgow West,Private rented: Private landlord or letting agency,8763
+Households,Glasgow West,Private rented: Other,248
+Households,Glasgow West,Lives Rent Free,672
+Households,Glenrothes and Mid Fife,All occupied households,42861
+Households,Glenrothes and Mid Fife,Owned: Total,25442
+Households,Glenrothes and Mid Fife,Owned: Owned outright,13854
+Households,Glenrothes and Mid Fife,Owned: Owned with a mortgage or loan,11395
+Households,Glenrothes and Mid Fife,Owned: Shared ownership (part owned and part rented),57
+Households,Glenrothes and Mid Fife,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),139
+Households,Glenrothes and Mid Fife,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,12596
+Households,Glenrothes and Mid Fife,Private rented: Total,4221
+Households,Glenrothes and Mid Fife,Private rented: Private landlord or letting agency,4072
+Households,Glenrothes and Mid Fife,Private rented: Other,149
+Households,Glenrothes and Mid Fife,Lives Rent Free,602
+Households,Gordon and Buchan,All occupied households,40108
+Households,Gordon and Buchan,Owned: Total,30676
+Households,Gordon and Buchan,Owned: Owned outright,16165
+Households,Gordon and Buchan,Owned: Owned with a mortgage or loan,14112
+Households,Gordon and Buchan,Owned: Shared ownership (part owned and part rented),80
+Households,Gordon and Buchan,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),319
+Households,Gordon and Buchan,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,5238
+Households,Gordon and Buchan,Private rented: Total,3613
+Households,Gordon and Buchan,Private rented: Private landlord or letting agency,3498
+Households,Gordon and Buchan,Private rented: Other,114
+Households,Gordon and Buchan,Lives Rent Free,583
+Households,Hamilton and Clyde Valley,All occupied households,44351
+Households,Hamilton and Clyde Valley,Owned: Total,29781
+Households,Hamilton and Clyde Valley,Owned: Owned outright,15131
+Households,Hamilton and Clyde Valley,Owned: Owned with a mortgage or loan,14447
+Households,Hamilton and Clyde Valley,Owned: Shared ownership (part owned and part rented),39
+Households,Hamilton and Clyde Valley,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),164
+Households,Hamilton and Clyde Valley,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9449
+Households,Hamilton and Clyde Valley,Private rented: Total,4577
+Households,Hamilton and Clyde Valley,Private rented: Private landlord or letting agency,4451
+Households,Hamilton and Clyde Valley,Private rented: Other,126
+Households,Hamilton and Clyde Valley,Lives Rent Free,544
+Households,Inverclyde and Renfrewshire West,All occupied households,42329
+Households,Inverclyde and Renfrewshire West,Owned: Total,27908
+Households,Inverclyde and Renfrewshire West,Owned: Owned outright,15799
+Households,Inverclyde and Renfrewshire West,Owned: Owned with a mortgage or loan,11875
+Households,Inverclyde and Renfrewshire West,Owned: Shared ownership (part owned and part rented),124
+Households,Inverclyde and Renfrewshire West,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),109
+Households,Inverclyde and Renfrewshire West,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9680
+Households,Inverclyde and Renfrewshire West,Private rented: Total,4342
+Households,Inverclyde and Renfrewshire West,Private rented: Private landlord or letting agency,4152
+Households,Inverclyde and Renfrewshire West,Private rented: Other,194
+Households,Inverclyde and Renfrewshire West,Lives Rent Free,398
+Households,"Inverness, Skye and West Ross-shire",All occupied households,50093
+Households,"Inverness, Skye and West Ross-shire",Owned: Total,33298
+Households,"Inverness, Skye and West Ross-shire",Owned: Owned outright,18799
+Households,"Inverness, Skye and West Ross-shire",Owned: Owned with a mortgage or loan,13443
+Households,"Inverness, Skye and West Ross-shire",Owned: Shared ownership (part owned and part rented),195
+Households,"Inverness, Skye and West Ross-shire",Owned: Shared Equity (e.g. LIFT or Help-to-Buy),861
+Households,"Inverness, Skye and West Ross-shire",Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9926
+Households,"Inverness, Skye and West Ross-shire",Private rented: Total,5971
+Households,"Inverness, Skye and West Ross-shire",Private rented: Private landlord or letting agency,5617
+Households,"Inverness, Skye and West Ross-shire",Private rented: Other,354
+Households,"Inverness, Skye and West Ross-shire",Lives Rent Free,895
+Households,Livingston,All occupied households,44193
+Households,Livingston,Owned: Total,28907
+Households,Livingston,Owned: Owned outright,13402
+Households,Livingston,Owned: Owned with a mortgage or loan,15006
+Households,Livingston,Owned: Shared ownership (part owned and part rented),49
+Households,Livingston,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),454
+Households,Livingston,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10637
+Households,Livingston,Private rented: Total,4185
+Households,Livingston,Private rented: Private landlord or letting agency,4023
+Households,Livingston,Private rented: Other,165
+Households,Livingston,Lives Rent Free,464
+Households,Lothian East,All occupied households,41870
+Households,Lothian East,Owned: Total,28538
+Households,Lothian East,Owned: Owned outright,14829
+Households,Lothian East,Owned: Owned with a mortgage or loan,13200
+Households,Lothian East,Owned: Shared ownership (part owned and part rented),118
+Households,Lothian East,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),394
+Households,Lothian East,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9506
+Households,Lothian East,Private rented: Total,3274
+Households,Lothian East,Private rented: Private landlord or letting agency,3166
+Households,Lothian East,Private rented: Other,108
+Households,Lothian East,Lives Rent Free,552
+Households,Mid Dunbartonshire,All occupied households,40272
+Households,Mid Dunbartonshire,Owned: Total,34418
+Households,Mid Dunbartonshire,Owned: Owned outright,19364
+Households,Mid Dunbartonshire,Owned: Owned with a mortgage or loan,14857
+Households,Mid Dunbartonshire,Owned: Shared ownership (part owned and part rented),60
+Households,Mid Dunbartonshire,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),138
+Households,Mid Dunbartonshire,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,3225
+Households,Mid Dunbartonshire,Private rented: Total,2291
+Households,Mid Dunbartonshire,Private rented: Private landlord or letting agency,2192
+Households,Mid Dunbartonshire,Private rented: Other,102
+Households,Mid Dunbartonshire,Lives Rent Free,335
+Households,"Moray West, Nairn and Strathspey",All occupied households,45493
+Households,"Moray West, Nairn and Strathspey",Owned: Total,30517
+Households,"Moray West, Nairn and Strathspey",Owned: Owned outright,18291
+Households,"Moray West, Nairn and Strathspey",Owned: Owned with a mortgage or loan,11847
+Households,"Moray West, Nairn and Strathspey",Owned: Shared ownership (part owned and part rented),92
+Households,"Moray West, Nairn and Strathspey",Owned: Shared Equity (e.g. LIFT or Help-to-Buy),284
+Households,"Moray West, Nairn and Strathspey",Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,8127
+Households,"Moray West, Nairn and Strathspey",Private rented: Total,5926
+Households,"Moray West, Nairn and Strathspey",Private rented: Private landlord or letting agency,5122
+Households,"Moray West, Nairn and Strathspey",Private rented: Other,804
+Households,"Moray West, Nairn and Strathspey",Lives Rent Free,920
+Households,"Motherwell, Wishaw and Carluke",All occupied households,44207
+Households,"Motherwell, Wishaw and Carluke",Owned: Total,26436
+Households,"Motherwell, Wishaw and Carluke",Owned: Owned outright,12861
+Households,"Motherwell, Wishaw and Carluke",Owned: Owned with a mortgage or loan,13294
+Households,"Motherwell, Wishaw and Carluke",Owned: Shared ownership (part owned and part rented),83
+Households,"Motherwell, Wishaw and Carluke",Owned: Shared Equity (e.g. LIFT or Help-to-Buy),199
+Households,"Motherwell, Wishaw and Carluke",Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,13654
+Households,"Motherwell, Wishaw and Carluke",Private rented: Total,3555
+Households,"Motherwell, Wishaw and Carluke",Private rented: Private landlord or letting agency,3411
+Households,"Motherwell, Wishaw and Carluke",Private rented: Other,144
+Households,"Motherwell, Wishaw and Carluke",Lives Rent Free,564
+Households,North East Fife,All occupied households,40975
+Households,North East Fife,Owned: Total,27543
+Households,North East Fife,Owned: Owned outright,17336
+Households,North East Fife,Owned: Owned with a mortgage or loan,9905
+Households,North East Fife,Owned: Shared ownership (part owned and part rented),162
+Households,North East Fife,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),138
+Households,North East Fife,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,6650
+Households,North East Fife,Private rented: Total,6159
+Households,North East Fife,Private rented: Private landlord or letting agency,5814
+Households,North East Fife,Private rented: Other,349
+Households,North East Fife,Lives Rent Free,623
+Households,Paisley and Renfrewshire North,All occupied households,43222
+Households,Paisley and Renfrewshire North,Owned: Total,28784
+Households,Paisley and Renfrewshire North,Owned: Owned outright,14059
+Households,Paisley and Renfrewshire North,Owned: Owned with a mortgage or loan,14389
+Households,Paisley and Renfrewshire North,Owned: Shared ownership (part owned and part rented),58
+Households,Paisley and Renfrewshire North,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),279
+Households,Paisley and Renfrewshire North,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9376
+Households,Paisley and Renfrewshire North,Private rented: Total,4573
+Households,Paisley and Renfrewshire North,Private rented: Private landlord or letting agency,4426
+Households,Paisley and Renfrewshire North,Private rented: Other,147
+Households,Paisley and Renfrewshire North,Lives Rent Free,488
+Households,Paisley and Renfrewshire South,All occupied households,45518
+Households,Paisley and Renfrewshire South,Owned: Total,28797
+Households,Paisley and Renfrewshire South,Owned: Owned outright,14638
+Households,Paisley and Renfrewshire South,Owned: Owned with a mortgage or loan,13878
+Households,Paisley and Renfrewshire South,Owned: Shared ownership (part owned and part rented),60
+Households,Paisley and Renfrewshire South,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),224
+Households,Paisley and Renfrewshire South,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10936
+Households,Paisley and Renfrewshire South,Private rented: Total,5299
+Households,Paisley and Renfrewshire South,Private rented: Private landlord or letting agency,5091
+Households,Paisley and Renfrewshire South,Private rented: Other,211
+Households,Paisley and Renfrewshire South,Lives Rent Free,490
+Households,Perth and Kinross-shire,All occupied households,47153
+Households,Perth and Kinross-shire,Owned: Total,31590
+Households,Perth and Kinross-shire,Owned: Owned outright,18032
+Households,Perth and Kinross-shire,Owned: Owned with a mortgage or loan,12718
+Households,Perth and Kinross-shire,Owned: Shared ownership (part owned and part rented),260
+Households,Perth and Kinross-shire,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),580
+Households,Perth and Kinross-shire,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,8139
+Households,Perth and Kinross-shire,Private rented: Total,6602
+Households,Perth and Kinross-shire,Private rented: Private landlord or letting agency,6376
+Households,Perth and Kinross-shire,Private rented: Other,226
+Households,Perth and Kinross-shire,Lives Rent Free,822
+Households,Rutherglen,All occupied households,42600
+Households,Rutherglen,Owned: Total,29117
+Households,Rutherglen,Owned: Owned outright,13875
+Households,Rutherglen,Owned: Owned with a mortgage or loan,14943
+Households,Rutherglen,Owned: Shared ownership (part owned and part rented),55
+Households,Rutherglen,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),244
+Households,Rutherglen,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9279
+Households,Rutherglen,Private rented: Total,3775
+Households,Rutherglen,Private rented: Private landlord or letting agency,3614
+Households,Rutherglen,Private rented: Other,161
+Households,Rutherglen,Lives Rent Free,432
+Households,Stirling and Strathallan,All occupied households,44517
+Households,Stirling and Strathallan,Owned: Total,30005
+Households,Stirling and Strathallan,Owned: Owned outright,16825
+Households,Stirling and Strathallan,Owned: Owned with a mortgage or loan,12855
+Households,Stirling and Strathallan,Owned: Shared ownership (part owned and part rented),78
+Households,Stirling and Strathallan,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),247
+Households,Stirling and Strathallan,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,8198
+Households,Stirling and Strathallan,Private rented: Total,5593
+Households,Stirling and Strathallan,Private rented: Private landlord or letting agency,5389
+Households,Stirling and Strathallan,Private rented: Other,203
+Households,Stirling and Strathallan,Lives Rent Free,721
+Households,West Dunbartonshire,All occupied households,43878
+Households,West Dunbartonshire,Owned: Total,25085
+Households,West Dunbartonshire,Owned: Owned outright,13089
+Households,West Dunbartonshire,Owned: Owned with a mortgage or loan,11752
+Households,West Dunbartonshire,Owned: Shared ownership (part owned and part rented),109
+Households,West Dunbartonshire,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),132
+Households,West Dunbartonshire,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,14774
+Households,West Dunbartonshire,Private rented: Total,3556
+Households,West Dunbartonshire,Private rented: Private landlord or letting agency,3401
+Households,West Dunbartonshire,Private rented: Other,157
+Households,West Dunbartonshire,Lives Rent Free,459
+Households,"Ayr, Carrick and Cumnock",All occupied households,42378
+Households,"Ayr, Carrick and Cumnock",Owned: Total,27419
+Households,"Ayr, Carrick and Cumnock",Owned: Owned outright,16640
+Households,"Ayr, Carrick and Cumnock",Owned: Owned with a mortgage or loan,10625
+Households,"Ayr, Carrick and Cumnock",Owned: Shared ownership (part owned and part rented),51
+Households,"Ayr, Carrick and Cumnock",Owned: Shared Equity (e.g. LIFT or Help-to-Buy),106
+Households,"Ayr, Carrick and Cumnock",Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9812
+Households,"Ayr, Carrick and Cumnock",Private rented: Total,4460
+Households,"Ayr, Carrick and Cumnock",Private rented: Private landlord or letting agency,4332
+Households,"Ayr, Carrick and Cumnock",Private rented: Other,128
+Households,"Ayr, Carrick and Cumnock",Lives Rent Free,684
+Households,"Berwickshire, Roxburgh and Selkirk",All occupied households,46321
+Households,"Berwickshire, Roxburgh and Selkirk",Owned: Total,28360
+Households,"Berwickshire, Roxburgh and Selkirk",Owned: Owned outright,18117
+Households,"Berwickshire, Roxburgh and Selkirk",Owned: Owned with a mortgage or loan,9977
+Households,"Berwickshire, Roxburgh and Selkirk",Owned: Shared ownership (part owned and part rented),98
+Households,"Berwickshire, Roxburgh and Selkirk",Owned: Shared Equity (e.g. LIFT or Help-to-Buy),165
+Households,"Berwickshire, Roxburgh and Selkirk",Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10157
+Households,"Berwickshire, Roxburgh and Selkirk",Private rented: Total,6596
+Households,"Berwickshire, Roxburgh and Selkirk",Private rented: Private landlord or letting agency,6411
+Households,"Berwickshire, Roxburgh and Selkirk",Private rented: Other,188
+Households,"Berwickshire, Roxburgh and Selkirk",Lives Rent Free,1208
+Households,Central Ayrshire,All occupied households,41117
+Households,Central Ayrshire,Owned: Total,27441
+Households,Central Ayrshire,Owned: Owned outright,15491
+Households,Central Ayrshire,Owned: Owned with a mortgage or loan,11756
+Households,Central Ayrshire,Owned: Shared ownership (part owned and part rented),62
+Households,Central Ayrshire,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),132
+Households,Central Ayrshire,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,9048
+Households,Central Ayrshire,Private rented: Total,4097
+Households,Central Ayrshire,Private rented: Private landlord or letting agency,3981
+Households,Central Ayrshire,Private rented: Other,116
+Households,Central Ayrshire,Lives Rent Free,531
+Households,Kilmarnock and Loudoun,All occupied households,44098
+Households,Kilmarnock and Loudoun,Owned: Total,28452
+Households,Kilmarnock and Loudoun,Owned: Owned outright,14944
+Households,Kilmarnock and Loudoun,Owned: Owned with a mortgage or loan,13294
+Households,Kilmarnock and Loudoun,Owned: Shared ownership (part owned and part rented),37
+Households,Kilmarnock and Loudoun,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),179
+Households,Kilmarnock and Loudoun,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,10792
+Households,Kilmarnock and Loudoun,Private rented: Total,4347
+Households,Kilmarnock and Loudoun,Private rented: Private landlord or letting agency,4195
+Households,Kilmarnock and Loudoun,Private rented: Other,156
+Households,Kilmarnock and Loudoun,Lives Rent Free,503
+Households,West Aberdeenshire and Kincardine,All occupied households,41681
+Households,West Aberdeenshire and Kincardine,Owned: Total,32078
+Households,West Aberdeenshire and Kincardine,Owned: Owned outright,17101
+Households,West Aberdeenshire and Kincardine,Owned: Owned with a mortgage or loan,14489
+Households,West Aberdeenshire and Kincardine,Owned: Shared ownership (part owned and part rented),110
+Households,West Aberdeenshire and Kincardine,Owned: Shared Equity (e.g. LIFT or Help-to-Buy),378
+Households,West Aberdeenshire and Kincardine,Social Rented: Council (LA) or Housing Association/ Registered Social Landlord,4786
+Households,West Aberdeenshire and Kincardine,Private rented: Total,4051
+Households,West Aberdeenshire and Kincardine,Private rented: Private landlord or letting agency,3920
+Households,West Aberdeenshire and Kincardine,Private rented: Other,133
+Households,West Aberdeenshire and Kincardine,Lives Rent Free,764
+,,,
+,,,
+INFO,Data has been perturbed,,
+,,,
+,,,
+"Crown copyright 2024 For further information on variables, see https://www.scotlandscensus.gov.uk/about/metadata-a-to-z/ In order to protect against disclosure of personal information, Statistical Disclosure Control has been applied to the data/outputs.  Cells might not sum to sub totals and totals due to these Statistical Disclosure Controls. To find out more on this visit https://www.scotlandscensus.gov.uk/about/2022-census/statistical-methodology/statistical-disclosure-control/",,,
+,,,
+(c) Copyright WingArc Australia 2018,,,

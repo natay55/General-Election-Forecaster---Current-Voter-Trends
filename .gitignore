@@ -1,0 +1,11 @@
+.RData
+.Rhistory
+.Rproj.user
+BES2024_W30_v30.1.dta
+BES-2024-General-Election-results-file-v1.0.dta
+model_fit.rds
+party_models.rds
+model_fit_scottish.rds
+party_models_scotland.rds
+model_fit_wales.rds
+party_models_wales.rds
