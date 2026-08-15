@@ -62,9 +62,6 @@ for feature in geojson_data["features"]:
     party = feature["properties"].get("party", "")
     feature["properties"]["color"] = party_colours.get(party, "#AAAAAA")
 
-with open("frontend/data/uk_constituencies.json", "w") as f:
-    json.dump(geojson_data, f)
-
 #--------------------------------------------------
 # JavaScript functions
 #--------------------------------------------------
