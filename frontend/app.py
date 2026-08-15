@@ -17,12 +17,7 @@ predictions_path = BASE_DIR / "data" / "uk_election_predictions.xlsx"
 
 constituency_sf = gpd.read_file(shapefile_path).to_crs(epsg=4326)
 predictions = pd.read_excel(predictions_path)
-
-map_data = constituency_sf.merge(
-    predictions,
-    on  = "PCON24CD",
-    how = "left"
-)
+map_data = constituency_sf.merge(predictions, on="PCON24CD", how="left")
 
 ni_parties = ["sinn fein", "dup", "sdlp", "alliance", "uup", "tuv", "other"]
 
@@ -66,6 +61,9 @@ geojson_data = json.loads(map_data.to_json())
 for feature in geojson_data["features"]:
     party = feature["properties"].get("party", "")
     feature["properties"]["color"] = party_colours.get(party, "#AAAAAA")
+
+with open("frontend/data/uk_constituencies.json", "w") as f:
+    json.dump(geojson_data, f)
 
 #--------------------------------------------------
 # JavaScript functions
