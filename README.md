@@ -82,6 +82,11 @@ With all of this considered, I believe my model captures the general direction o
 
 [3]: British Election Study - https://www.britishelectionstudy.com/data-object/british-election-study-combined-wave-1-30-internet-panel-open-ended-response-data/
 
+Contains ONS data licensed under the Open Government Licence v3.0  
+Source: Office for National Statistics
+Contains data from Scotland's Census 2022, sourced via UK Data Service
+Contains WIMD 2025 data © Crown copyright, Welsh Government
+
 [4]: YouGov - https://yougov.com/en-gb/trackers/the-most-important-issues-facing-the-country 
 
 [5]: UK Election Analysis: Changing patterns amongst Muslim voters: the Labour Party, Gaza and voter volatility - https://www.electionanalysis.uk/uk-election-analysis-2024/section-2-voters-polls-and-results/changing-pattern-amongst-muslim-voters-the-labour-party-gaza-and-voter-volatility/
