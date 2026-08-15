@@ -3,4 +3,6 @@ dash-leaflet
 dash-extensions
 plotly
 pandas
+geopandas
 openpyxl
+shapely
