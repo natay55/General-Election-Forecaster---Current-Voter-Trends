@@ -254,6 +254,61 @@ voting_likely_england <- voting_likely_england |>
   )
 
 #-------------------------------------------------------------------------------
+#Incumbency for Scotland
+incumbency_override_scotland <- list(
+  "aberdeen south"               = "Conservative",
+  "arbroath and broughty ferry"  = "Scottish National Party (SNP)"
+)
+
+by_election_results_scotland <- list(
+  "aberdeen south" = list(party="Conservative", share = 0.495),
+  "arbroath and broughty ferry" = list(party = "Scottish National Party (SNP)", share = 0.411)
+)
+
+constituency_data_scotland <- bes_elections |>
+  filter(Country == "Scotland") |>
+  mutate(
+    new_pcon = remove_accents(tolower(ConstituencyName)),
+    Winner24 = case_when(
+      Winner24 == "Con"   ~ "Conservative",
+      Winner24 == "Lab"   ~ "Labour",
+      Winner24 == "LD"    ~ "Liberal Democrat",
+      Winner24 == "RUK"   ~ "Brexit Party/Reform UK",
+      Winner24 == "Green" ~ "Green Party",
+      Winner24 == "SNP"   ~ "Scottish National Party (SNP)",
+      Winner24 == "Ind"   ~ "Other",
+      TRUE                ~ Winner24
+    )
+  ) |>
+  left_join(
+    tibble(
+      new_pcon      = names(incumbency_override_scotland),
+      current_party = unlist(incumbency_override_scotland)
+    ),
+    by = "new_pcon"
+  ) |>
+  left_join(
+    tibble(
+      new_pcon          = names(by_election_results_scotland),
+      by_election_share = map_dbl(by_election_results_scotland, ~ .x$share)
+    ),
+    by = "new_pcon"
+  ) |>
+  mutate(
+    current_winner = coalesce(current_party, Winner24)
+  ) |>
+  select(new_pcon, current_winner, by_election_share)
+
+#-------------------------------------------------------------------------------
+#Add the incumbency to voting likely scotland
+voting_likely_scotland <- voting_likely_scotland |>
+  left_join(
+    constituency_data_scotland |>
+      select(new_pcon, current_winner, by_election_share),
+    by = "new_pcon"
+  )
+
+#-------------------------------------------------------------------------------
 #Filter out Plaid Cymru from English voting grid (new data had English person intending to vote for Plaid Cymru)
 voting_likely_england <- voting_likely_england |>
   mutate(

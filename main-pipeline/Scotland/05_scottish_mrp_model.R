@@ -50,7 +50,16 @@ if (file.exists(PARTY_MODELS_SCOTLAND_PATH)) {
     party_data <- voting_likely_scotland |>
       mutate(
         vote           = if_else(vote_label == party, 1L, 0L),
-        party_share_24 = .data[[party_share_map_scottish[[party]]]]
+        raw_share      = if_else(
+          !is.na(by_election_share) & current_winner == party,
+          by_election_share,
+          .data[[party_share_map_scottish[[party]]]]
+        ),
+        party_share_24 = if_else(
+          current_winner == party,
+          1 + raw_share,
+          raw_share
+        )
       )
     
     if (party == "Brexit Party/Reform UK") {

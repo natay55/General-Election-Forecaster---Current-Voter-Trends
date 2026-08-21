@@ -71,15 +71,13 @@ constituency_vote_shares_calibrated_scotland
 historical_dist_scot <- bes_elections |>
   filter(Country == "Scotland") |>
   summarise(
-    # 2019 only — anomalous 2024 performance in both directions
-    sd_snp    = sd(SNP19,   na.rm = TRUE) / 100,
-    sd_lab    = sd(Lab19,   na.rm = TRUE) / 100,
-    # 2024 only — current position is the baseline
-    sd_con    = sd(Con24,   na.rm = TRUE) / 100,
-    sd_ld     = sd(LD24,    na.rm = TRUE) / 100,
-    sd_green  = sd(Green24, na.rm = TRUE) / 100,
-    sd_other  = sd(Other24, na.rm = TRUE) / 100,
-    sd_reform = sd(RUK24,   na.rm = TRUE) / 100
+    sd_lab    = sd(Lab19, na.rm = TRUE) / 100,
+    sd_snp    = mean(c(sd(SNP24,   na.rm = TRUE), sd(SNP19,    na.rm = TRUE))) / 100,
+    sd_con    = mean(c(sd(Con24,   na.rm = TRUE), sd(Con19,    na.rm = TRUE))) / 100,
+    sd_ld     = mean(c(sd(LD24,    na.rm = TRUE), sd(LD19,     na.rm = TRUE))) / 100,
+    sd_green  = mean(c(sd(Green24, na.rm = TRUE), sd(Green19,  na.rm = TRUE))) / 100,
+    sd_other  = mean(c(sd(Other24, na.rm = TRUE), sd(Other19,  na.rm = TRUE))) / 100,
+    sd_reform = mean(c(sd(RUK24,   na.rm = TRUE), sd(Brexit19, na.rm = TRUE))) / 100
   )
 
 party_sd_map_scotland <- list(
