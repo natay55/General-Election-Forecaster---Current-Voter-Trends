@@ -1,8 +1,8 @@
 #-------------------------------------------------------------------------------------------
 # Load BES survey and election results data
 
-# BES Wave 30 individual level survey data
-bes <- read_dta(here("data", "BES", "BES2024_W30_v30.1.dta"))
+# Wave 31 has been released!
+bes <- read_dta(here("data","BES","BES2024_W31_v31.05.dta"))
 
 # 2024 GE constituency results including Hanretty Brexit estimates
 bes_elections <- read_dta(here("data","BES","BES-2024-General-Election-results-file-v1.0.dta"))
@@ -101,7 +101,7 @@ make_voting_likely <- function(voting_country) {
       ),
       # Convert haven labelled variables to base R types for glmer compatibility
       gender      = as.integer(gender),
-      p_eurefvote = as.integer(p_eurefvote)
+      p_eurefvote = as.integer(replace_na(p_eurefvote, 0L))
     ) |>
     filter(
       !is.na(ageGroup),
@@ -251,4 +251,25 @@ voting_likely_england <- voting_likely_england |>
     constituency_data |>
       select(new_pcon, current_winner, by_election_share),
     by = "new_pcon"
+  )
+
+#-------------------------------------------------------------------------------
+#Filter out Plaid Cymru from English voting grid (new data had English person intending to vote for Plaid Cymru)
+voting_likely_england <- voting_likely_england |>
+  mutate(
+    past_vote_2024 = if_else(
+      past_vote_2024 == "Plaid Cymru",
+      "Other",
+      past_vote_2024
+    )
+  )
+
+#-------------------------------------------------------------------------------
+#Same as above but for the SNP in Wales
+voting_likely_wales <- voting_likely_wales |>
+  mutate(
+    past_vote_2024 = case_when(
+      past_vote_2024 == "Scottish National Party (SNP)" ~ "Other",
+      TRUE                                              ~ past_vote_2024
+    )
   )
