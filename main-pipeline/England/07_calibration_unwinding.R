@@ -54,11 +54,10 @@ constituency_vote_shares_calibrated <- constituency_vote_shares |>
 historical_dist <- bes_elections |>
   filter(Country == "England") |>
   summarise(
-    # Average 2019 and 2024 — parties expected to revert toward historical norms
-    sd_lab    = mean(c(sd(Lab24,   na.rm = TRUE), sd(Lab19,      na.rm = TRUE))) / 100,
-    sd_con    = mean(c(sd(Con24,   na.rm = TRUE), sd(Con19,      na.rm = TRUE))) / 100,
     # 2024 only — parties undergoing structural geographic realignment
+    sd_lab    = sd(Lab24,   na.rm = TRUE) / 100,
     sd_reform = sd(RUK24,   na.rm = TRUE) / 100,
+    sd_con    = sd(Con24,   na.rm = TRUE) / 100,
     sd_ld     = sd(LD24,    na.rm = TRUE) / 100,
     sd_green  = sd(Green24, na.rm = TRUE) / 100,
     sd_other  = sd(Other24, na.rm = TRUE) / 100
@@ -82,8 +81,7 @@ constituency_unwound <- constituency_vote_shares_calibrated |>
     scaling_ratio = historical_sd / current_sd,
     vote_share    = case_when(
       # Symmetric unwinding — parties expected to revert to historical norms
-      # averaging 2019 and 2024 gives a more representative historical baseline
-      party %in% c("Labour", "Conservative") ~
+      party %in% c("Labour", "Conservative", "Brexit Party/Reform UK") ~
         national_mean + (vote_share - national_mean) * scaling_ratio,
       # Asymmetric unwinding — parties in structural geographic realignment
       # LD, Green and Other have genuine new geographic coalitions
