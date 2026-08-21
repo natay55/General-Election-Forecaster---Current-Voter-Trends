@@ -30,7 +30,7 @@ mrp_national <- constituency_vote_shares |>
 calibration <- mrp_national |>
   left_join(aggregator_shares, by = "party") |>
   mutate(ratio = case_when(
-    party %in% c("Liberal Democrat", "Other") ~ 1,
+    party %in% c("Liberal Democrat", "Other", "Green Party") ~ 1,
     TRUE                                       ~ aggregator_mean / mrp_mean
   ))
 
@@ -57,8 +57,8 @@ historical_dist <- bes_elections |>
     # Average 2019 and 2024 — parties expected to revert toward historical norms
     sd_lab    = mean(c(sd(Lab24,   na.rm = TRUE), sd(Lab19,      na.rm = TRUE))) / 100,
     sd_con    = mean(c(sd(Con24,   na.rm = TRUE), sd(Con19,      na.rm = TRUE))) / 100,
-    sd_reform = mean(c(sd(RUK24,   na.rm = TRUE), sd(Brexit19, na.rm = TRUE))) / 100,
     # 2024 only — parties undergoing structural geographic realignment
+    sd_reform = sd(RUK24,   na.rm = TRUE) / 100,
     sd_ld     = sd(LD24,    na.rm = TRUE) / 100,
     sd_green  = sd(Green24, na.rm = TRUE) / 100,
     sd_other  = sd(Other24, na.rm = TRUE) / 100

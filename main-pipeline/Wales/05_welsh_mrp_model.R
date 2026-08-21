@@ -70,5 +70,5 @@ if (file.exists(here("data","Models","Wales","party_models_wales.rds"))) {
     cat("Fitted model for:", party, "\n")
   }
   
-  saveRDS(party_models, here("data","Models","Wales","party_models_wales.rds"))
+  saveRDS(party_models_wales, here("data","Models","Wales","party_models_wales.rds"))
 }
