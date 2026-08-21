@@ -6,38 +6,68 @@
 #-------------------------------------------------------------------------------------------
 # Fetch and clean polling data from PollCheck
 
-GE2024_DATE <- as.Date("2024-07-04")
-URL <- "https://www.electoralcalculus.co.uk/polls_scot.html"
+fetch_with_retry_scot <- function(url, max_attempts = 20, wait_seconds = 3) {
+  for (attempt in 1:max_attempts) {
+    result <- tryCatch(
+      fromJSON(url),
+      error = function(e) {
+        cat("Attempt", attempt, "failed:", conditionMessage(e), "\n")
+        Sys.sleep(wait_seconds)
+        NULL
+      }
+    )
+    if (!is.null(result)) {
+      cat("Successfully fetched on attempt", attempt, "\n")
+      return(result)
+    }
+  }
+  stop("Failed to fetch after ", max_attempts, " attempts")
+}
 
-raw_data <- URL |>
-  read_html()|>
-  html_nodes("table.llcccccccc")|>
-  html_table(fill=TRUE)
+raw_scot <- fetch_with_retry_scot("https://britain.votes.now/data/polls/sct_wmc.json")
 
-raw_data <- bind_rows(raw_data) |>
-  select(pollster = Pollster, polling_dates = ends_with('dates'), sample_size = ends_with('size'), ends_with('%')) |>
-  mutate(
-    across(ends_with('%'), (~. / 100)),
-    sample_size   = as.integer(str_remove_all(sample_size, ",")),
-    polling_dates = as.Date(str_extract(polling_dates, "(?<=-).*"), format = "%d %b %Y"),
-    pollster      = str_remove_all(pollster, "/(.*)"),
-    pollster      = as.integer(factor(pollster)),
-    time_id       = as.integer((polling_dates - GE2024_DATE) + 1)
+scot_polls <- raw_scot |>
+  as_tibble() |>
+  mutate(date = as.Date(date)) |>
+  filter(date >= as.Date("2024-07-04")) |>
+  filter(!map_lgl(polls, ~ length(.x) == 0)) |>
+  mutate(poll_data = map(polls, ~ as_tibble(.x))) |>
+  unnest(poll_data) |>
+  unnest_wider(values) |> 
+  select(
+    polling_dates = date,
+    pollster,
+    `LAB%`    = Lab,
+    `CON%`    = C,
+    `Reform%` = R,
+    `LIB%`    = Lib,
+    `Green%`  = G,
+    `SNP%`    = SNP,
+    other     = Oth
   ) |>
-  filter(!is.na(polling_dates), !is.na(sample_size), sample_size > 0) |>
-  # Replace NA party percentages with 0
-  mutate(across(ends_with('%'), ~replace_na(., 0))) |>
-  # Add other as remainder
-  mutate(other = 1 - rowSums(across(ends_with('%')), na.rm = TRUE))
+  mutate(
+    Pollster    = as.integer(factor(pollster)),
+    sample_size = 2000L #Sample size missing for all polls, so assume 2000 were surveyed
+  ) |>
+  filter(!is.na(polling_dates))
 
-party_cols_scottish <- raw_data |>
+#-------------------------------------------------------------------------------
+#Prep data for Bayesian Aggregation
+
+clean_data_scot <- scot_polls |>
+  mutate(
+    time_id  = as.integer(polling_dates - min(polling_dates)) + 1,
+    Pollster = as.integer(factor(pollster))
+  ) |>
+  filter(!is.na(polling_dates), !is.na(sample_size), !is.na(Pollster), sample_size > 0)
+
+party_cols_scottish <- clean_data_scot |>
   select(ends_with("%"), other) |>
   names()
 
-# Approximate respondent counts per party per poll
-y <- raw_data |>
+y_scot <- clean_data_scot |>
   select(all_of(party_cols_scottish), sample_size) |>
-  mutate(across(everything(), ~round(. * sample_size))) |>
+  mutate(across(everything(), ~replace_na(round(. * sample_size), 0L))) |>
   select(-sample_size) |>
   as.matrix()
 
@@ -45,14 +75,14 @@ y <- raw_data |>
 #Prepare Stan data
 
 stan_data_scottish <- list(
-  T         = as.integer(max(raw_data$time_id)),
-  J         = ncol(y),
-  P         = max(raw_data$pollster),
-  N         = nrow(raw_data),
-  poll_time = raw_data$time_id,
-  pollster  = raw_data$pollster,
-  n         = raw_data$sample_size,
-  y         = y
+  T         = as.integer(max(clean_data_scot$time_id)),
+  J         = ncol(y_scot),
+  P         = max(clean_data_scot$Pollster),
+  N         = nrow(clean_data_scot),
+  poll_time = clean_data_scot$time_id,
+  pollster  = clean_data_scot$Pollster,
+  n         = clean_data_scot$sample_size,
+  y         = y_scot
 )
 
 #--------------------------------------------------------------------------------------------

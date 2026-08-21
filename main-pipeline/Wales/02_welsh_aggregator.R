@@ -48,7 +48,7 @@ wales_polls <- raw_wales |>
   ) |>
   mutate(
     Pollster    = as.integer(factor(pollster)),
-    sample_size = 1000L
+    sample_size = 2000L
   ) |>
   filter(!is.na(polling_dates))
 
