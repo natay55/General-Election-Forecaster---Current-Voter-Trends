@@ -31,8 +31,8 @@ calibration_wales <- mrp_national_wales|>
   left_join(aggregator_shares_wales, by = "party") |>
   mutate(
     ratio = aggregator_mean / mrp_mean,
-    # Where ratio deviates substantially from 1, trust neither model nor aggregator
-    ratio = if_else(ratio < 0.8 | ratio > 1.2, 1, ratio)
+    # Only apply calibration where MRP and aggregator agree within 5 percentage points
+    ratio = if_else(abs(mrp_mean - aggregator_mean) > 0.05, 1, ratio)
   )
 
 constituency_vote_shares_calibrated_wales <- constituency_vote_shares_wales |>
