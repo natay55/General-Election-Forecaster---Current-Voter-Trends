@@ -8,7 +8,7 @@ prediction_grid_scottish <- voting_likely_scotland |>
     new_pcon, ageGroup_scot, 
     gender, p_education_level,
     housing_tenure_, past_vote_2024,
-    house_rented, Con_pc, scot_rem, 
+    mortgage_owned, private_rented, Con_pc, scot_rem, 
     dep_index, 
     Lab24, Con24, LD24, SNP24, RUK24, Green24, Other24
   )

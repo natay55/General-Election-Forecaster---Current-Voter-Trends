@@ -87,8 +87,10 @@ voting_likely_england <- voting_likely_england |>
       ) |>
       select(new_pcon = Constituency, tenure_type = Variable, pct = Constituency_Value) |>
       mutate(tenure_type = case_when(
-        tenure_type %in% c("Owned outright", "Owned with a mortgage or loan") ~ "house_owned",
-        tenure_type %in% c("Private rented", "Social rented")                 ~ "house_rented",
+        tenure_type %in% c("Owned outright")                                  ~ "house_owned",
+        tenure_type %in% c("Owned with a mortgage or loan")                   ~ "mortgage_owned",
+        tenure_type %in% c("Private rented")                                  ~ "private_rented",
+        tenure_type %in% c('Social rented')                                   ~ "social_rented",
         TRUE                                                                   ~ "house_other"
       )) |>
       group_by(new_pcon, tenure_type) |>
@@ -106,8 +108,10 @@ voting_likely_wales <- voting_likely_wales |>
       ) |>
       select(new_pcon = Constituency, tenure_type = Variable, pct = Constituency_Value) |>
       mutate(tenure_type = case_when(
-        tenure_type %in% c("Owned outright", "Owned with a mortgage or loan") ~ "house_owned",
-        tenure_type %in% c("Private rented", "Social rented")                 ~ "house_rented",
+        tenure_type %in% c("Owned outright")                                  ~ "house_owned",
+        tenure_type %in% c("Owned with a mortgage or loan")                   ~ "mortgage_owned",
+        tenure_type %in% c("Private rented")                                  ~ "private_rented",
+        tenure_type %in% c('Social rented')                                   ~ "social_rented",
         TRUE                                                                   ~ "house_other"
       )) |>
       group_by(new_pcon, tenure_type) |>

@@ -35,11 +35,11 @@ BASE_VARS <- c(
   "housing_tenure_",    # tenure — renter/owner political divide
   "past_vote_2024",     # 2024 GE vote — strongest individual predictor
   "density",            # population density — urban/rural divide
-  "house_rented",       # constituency rental proportion — housing issue block
+  "mortgage_owned",     # Proportion of those home owners with a mortgage
+  "private_rented",     # Proportion of those who are privately renting
   "con_pct",            # constituency degree holders percentage
   "muslim_pct",         # constituency Muslim population — community political effects
   "party_share_24",     # party specific 2024 constituency vote share,
-  "remain",             # Hanretty estimate of remain percentage per constituency
   "index"               # Index of Multiple Deprivation
 )
 

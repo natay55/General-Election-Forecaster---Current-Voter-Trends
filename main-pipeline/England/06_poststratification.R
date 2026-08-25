@@ -8,7 +8,7 @@ prediction_grid_base <- voting_likely_england |>
     new_pcon, ageGroup, p_ethnicity2,
     gender, p_education_level, ethnicity_harmonised,
     housing_tenure_, past_vote_2024, p_eurefvote,
-    density, house_rented, muslim_pct, remain,
+    density, mortgage_owned, private_rented, muslim_pct, 
     con_pct, index, spatial_lag_ld, spatial_lag_green, spatial_lag_con, spatial_lag_lab,
     Lab24, Con24, LD24, RUK24, Green24, Other24,
     by_election_share, current_winner

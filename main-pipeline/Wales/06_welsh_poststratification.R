@@ -6,7 +6,7 @@
 prediction_grid_welsh <- voting_likely_wales |>
   distinct(
     new_pcon, ageGroup, gender, p_education_level, 
-    housing_tenure_, past_vote_2024, house_rented,
+    housing_tenure_, past_vote_2024, mortgage_owned, private_rented,
     con_pct, index_dep_wales, welsh_speaking,
     Lab24, Con24, LD24, RUK24, Green24, PC24, Other24
   )

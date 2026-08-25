@@ -133,7 +133,7 @@ app.layout = html.Div(
                     style={"margin": "0", "fontSize": "24px", "fontWeight": "700"}
                 ),
                 html.P(
-                    "Last Updated: 24th August 2026",
+                    "Last Updated: 25th August 2026",
                     style={"margin": "4px 0", "fontSize": "12px", "opacity": "0.7"}
                 ),
             ]
