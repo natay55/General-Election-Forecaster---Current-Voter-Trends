@@ -87,11 +87,11 @@ voting_likely_england <- voting_likely_england |>
       ) |>
       select(new_pcon = Constituency, tenure_type = Variable, pct = Constituency_Value) |>
       mutate(tenure_type = case_when(
-        tenure_type %in% c("Owned outright")                                  ~ "house_owned",
-        tenure_type %in% c("Owned with a mortgage or loan")                   ~ "mortgage_owned",
-        tenure_type %in% c("Private rented")                                  ~ "private_rented",
-        tenure_type %in% c('Social rented')                                   ~ "social_rented",
-        TRUE                                                                   ~ "house_other"
+        tenure_type %in% c("Owned outright")                                  ~ "owned_outright_pct",
+        tenure_type %in% c("Owned with a mortgage or loan")                   ~ "mortgage_owner_loan_pct",
+        tenure_type %in% c("Private rented")                                  ~ "private_rented_pct",
+        tenure_type %in% c('Social rented')                                   ~ "social_rented_pct",
+        TRUE                                                                   ~ NA_character_
       )) |>
       group_by(new_pcon, tenure_type) |>
       summarise(total_pct = sum(pct, na.rm = TRUE), .groups = "drop") |>
@@ -108,11 +108,11 @@ voting_likely_wales <- voting_likely_wales |>
       ) |>
       select(new_pcon = Constituency, tenure_type = Variable, pct = Constituency_Value) |>
       mutate(tenure_type = case_when(
-        tenure_type %in% c("Owned outright")                                  ~ "house_owned",
-        tenure_type %in% c("Owned with a mortgage or loan")                   ~ "mortgage_owned",
-        tenure_type %in% c("Private rented")                                  ~ "private_rented",
-        tenure_type %in% c('Social rented')                                   ~ "social_rented",
-        TRUE                                                                   ~ "house_other"
+        tenure_type %in% c("Owned outright")                                  ~ "owned_outright_pct",
+        tenure_type %in% c("Owned with a mortgage or loan")                   ~ "mortgage_owner_loan_pct",
+        tenure_type %in% c("Private rented")                                  ~ "private_rented_pct",
+        tenure_type %in% c('Social rented')                                   ~ "social_rented_pct",
+        TRUE                                                                   ~ NA_character_
       )) |>
       group_by(new_pcon, tenure_type) |>
       summarise(total_pct = sum(pct, na.rm = TRUE), .groups = "drop") |>

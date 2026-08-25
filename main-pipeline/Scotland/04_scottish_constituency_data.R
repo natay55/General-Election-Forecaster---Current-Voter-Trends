@@ -22,10 +22,11 @@ scottish_tenure <- read_csv(here("data","Excel-Files","scottish_tenure.csv"), sk
   mutate(
     new_pcon = tolower(new_pcon),
     tenure_grouped = case_when(
-      str_detect(tenure, "^Owned") & !tenure %in% "Owned: Total" & str_detect(tenure, "mortgage") ~ "mortgage_owned",
-      str_detect(tenure, "^Social Rented") ~ "social_rented",
-      str_detect(tenure, "^Private rented") & !tenure %in% "Private rented: Total" ~ "private_rented",
-      TRUE ~ NA_character_
+      str_detect(tenure, "^Owned") & !tenure %in% "Owned: Total" & str_detect(tenure, "outright")  ~ "owned_outright_pct",
+      str_detect(tenure, "^Owned") & !tenure %in% "Owned: Total" & !str_detect(tenure, "outright") ~ "mortgage_owner_loan_pct",
+      str_detect(tenure, "^Social Rented")                                                         ~ "social_rented_pct",
+      str_detect(tenure, "^Private rented") & !tenure %in% "Private rented: Total"                 ~ "private_rented_pct",
+      TRUE                                                                                         ~ NA_character_
     )
   ) |>
   filter(!is.na(tenure_grouped)) |>

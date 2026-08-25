@@ -66,8 +66,11 @@ make_voting_likely <- function(voting_country) {
       ),
       # Housing tenure harmonised to match ONS census categories
       housing_tenure_ = case_when(
-        p_housing %in% c(1, 2, 3) ~ "house_owned",
-        p_housing %in% c(4, 5, 6, 7) ~ "house_rented"
+        p_housing == 1                   ~ "owned_outright",
+        p_housing %in% c(2,3)            ~ "mortgage_owner_loan",
+        p_housing %in% c(4,7,8)          ~ "private_rented",
+        p_housing %in% c(5,6)            ~ "social_rented",
+        TRUE                             ~ NA_character_
       ),
       # Ethnicity harmonised to match ONS census categories
       ethnicity_harmonised = case_when(
@@ -106,9 +109,12 @@ make_voting_likely <- function(voting_country) {
     filter(
       !is.na(ageGroup),
       !is.na(past_vote_2024),
-      !is.na(p_education_level)
+      !is.na(p_education_level),
+      !is.na(housing_tenure_)
     )
 }
+
+bes$p_housing
 
 # Create likely voter samples for each nation
 voting_likely_england  <- make_voting_likely(voting_england)

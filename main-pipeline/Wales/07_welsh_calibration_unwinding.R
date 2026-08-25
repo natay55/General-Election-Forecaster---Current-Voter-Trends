@@ -27,11 +27,13 @@ mrp_national_wales <- constituency_vote_shares_wales |>
 #   captures this geographic signal which calibration would undo
 # - Other support reflects candidate specific local effects not captured
 #   by national polling — previous vote share is more informative
-calibration_wales <- mrp_national_wales |>
+calibration_wales <- mrp_national_wales|>
   left_join(aggregator_shares_wales, by = "party") |>
-  mutate(ratio = case_when(
-    TRUE ~ aggregator_mean / mrp_mean
-  ))
+  mutate(
+    ratio = aggregator_mean / mrp_mean,
+    # Where ratio deviates substantially from 1, trust neither model nor aggregator
+    ratio = if_else(ratio < 0.8 | ratio > 1.2, 1, ratio)
+  )
 
 constituency_vote_shares_calibrated_wales <- constituency_vote_shares_wales |>
   left_join(calibration_wales |> select(party, ratio), by = "party") |>
@@ -86,4 +88,3 @@ constituency_unwound_wales <- constituency_vote_shares_calibrated_wales |>
   group_by(new_pcon) |>
   mutate(vote_share = vote_share / sum(vote_share)) |>
   ungroup()
-constituency_unwound_wales

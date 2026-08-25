@@ -30,7 +30,6 @@ mrp_national <- constituency_vote_shares |>
 calibration <- mrp_national |>
   left_join(aggregator_shares, by = "party") |>
   mutate(ratio = case_when(
-    party %in% c("Liberal Democrat", "Other", "Green Party") ~ 1,
     TRUE                                       ~ aggregator_mean / mrp_mean
   ))
 
@@ -80,17 +79,15 @@ constituency_unwound <- constituency_vote_shares_calibrated |>
     current_sd    = sd(vote_share),
     scaling_ratio = historical_sd / current_sd,
     vote_share    = case_when(
-      # Symmetric unwinding — parties expected to revert to historical norms
+      # Symmetric — Labour, Conservative, Reform
       party %in% c("Labour", "Conservative", "Brexit Party/Reform UK") ~
         national_mean + (vote_share - national_mean) * scaling_ratio,
-      # Asymmetric unwinding — parties in structural geographic realignment
-      # LD, Green and Other have genuine new geographic coalitions
-      # only stretch toward historical norm, never compress
+      # Asymmetric — Green, LD, Other
       scaling_ratio >= 1 ~
         national_mean + (vote_share - national_mean) * scaling_ratio,
       TRUE ~ vote_share
     ),
-    vote_share = pmax(vote_share, 0)
+    vote_share    = pmax(vote_share, 0)
   ) |>
   ungroup() |>
   group_by(new_pcon) |>

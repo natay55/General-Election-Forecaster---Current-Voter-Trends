@@ -20,8 +20,8 @@ BASE_VARS_SCOTTISH <- c(
   "housing_tenure_",
   "past_vote_2024",
   "scot_rem",
-  "mortgage_owned",
-  "private_rented",
+  "mortgage_owner_loan_pct",
+  "private_rented_pct",
   "Con_pc",
   "party_share_24",
   "dep_index"

@@ -22,8 +22,8 @@ BASE_VARS_WALES <- c(
   "p_education_level",  # qualifications — graduate/non-graduate divide
   "housing_tenure_",    # tenure — renter/owner political divide
   "past_vote_2024",     # 2024 GE vote — strongest individual predictor
-  "mortgage_owned",     #Proportion of mortgage buyers in a constituency
-  "private_rented",     #Proportion of private renters in a constituency
+  "mortgage_owner_loan_pct",     #Proportion of mortgage buyers in a constituency
+  "private_rented_pct",     #Proportion of private renters in a constituency
   "con_pct",            # constituency degree holders percentage
   "party_share_24",     # party specific 2024 constituency vote share
   "welsh_speaking",        # Percentage of Welsh speakers in each constituency

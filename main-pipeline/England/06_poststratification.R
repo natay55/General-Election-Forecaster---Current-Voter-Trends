@@ -8,7 +8,7 @@ prediction_grid_base <- voting_likely_england |>
     new_pcon, ageGroup, p_ethnicity2,
     gender, p_education_level, ethnicity_harmonised,
     housing_tenure_, past_vote_2024, p_eurefvote,
-    density, mortgage_owned, private_rented, muslim_pct, 
+    density, mortgage_owner_loan_pct, private_rented_pct, muslim_pct, 
     con_pct, index, spatial_lag_ld, spatial_lag_green, spatial_lag_con, spatial_lag_lab,
     Lab24, Con24, LD24, RUK24, Green24, Other24,
     by_election_share, current_winner
@@ -41,6 +41,8 @@ prediction_grid <- imap_dfr(party_models, function(model, party) {
       party = party
     )
 })
+
+
 #-------------------------------------------------------------------------------------------
 # Poststratification weights
 # Following Lauderdale (2018) — reweight predictions by true constituency
@@ -82,17 +84,11 @@ tenure_by_age <- tenure_by_age |>
     
     # Tenure categories harmonised to match BES housing_tenure_ categories
     tenure_type = case_when(
-      tenure %in% c(
-        "Owned: Owns outright",
-        "Owned: Owns with a mortgage or loan or shared ownership"
-      ) ~ "house_owned",
-      tenure %in% c(
-        "Social rented: Rents from council or Local Authority",
-        "Social rented: Other social rented",
-        "Private rented: Private landlord or letting agency",
-        "Private rented: Other private rented or lives rent free"
-      ) ~ "house_rented",
-      TRUE ~ NA_character_
+      tenure == "Owned: Owns outright"                                                                                               ~ "owned_outright",
+      tenure == "Owned: Owns with a mortgage or loan or shared ownership"                                                            ~ "mortgage_owner_loan",
+      tenure %in% c("Social rented: Rents from council or Local Authority", "Social rented: Other social rented")                    ~ "social_rented",
+      tenure %in% c("Private rented: Private landlord or letting agency", "Private rented: Other private rented or lives rent free") ~ "private_rented",
+      TRUE                                                                                                                           ~ NA_character_
     )
   ) |>
   filter(!is.na(age_group_harmonised), !is.na(tenure_type)) |>

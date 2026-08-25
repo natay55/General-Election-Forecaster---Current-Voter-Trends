@@ -19,8 +19,6 @@ aggregator_shares_scottish <- summary_table_scottish |>
 mrp_national_scottish <- constituency_vote_shares_scotland |>
   group_by(party) |>
   summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
-mrp_national_scottish
-
 
 #-------------------------------------------------------------------------------------------
 # Scottish calibration note
@@ -37,9 +35,11 @@ mrp_national_scottish
 
 calibration_scotland <- mrp_national_scottish |>
   left_join(aggregator_shares_scottish, by = "party") |>
-  mutate(ratio = case_when(
-    TRUE ~ aggregator_mean / mrp_mean
-  ))
+  mutate(
+    ratio = aggregator_mean / mrp_mean,
+    # Where ratio deviates substantially from 1, trust neither model nor aggregator
+    ratio = if_else(ratio < 0.8 | ratio > 1.2, 1, ratio)
+  )
 
 constituency_vote_shares_calibrated_scotland <- constituency_vote_shares_scotland |>
   left_join(calibration_scotland |> select(party, ratio), by = "party") |>
@@ -71,7 +71,7 @@ constituency_vote_shares_calibrated_scotland
 historical_dist_scot <- bes_elections |>
   filter(Country == "Scotland") |>
   summarise(
-    sd_lab    = sd(Lab19, na.rm = TRUE) / 100,
+    sd_lab    = mean(c(sd(Lab24,   na.rm = TRUE), sd(Lab19,    na.rm = TRUE))) / 100,
     sd_snp    = mean(c(sd(SNP24,   na.rm = TRUE), sd(SNP19,    na.rm = TRUE))) / 100,
     sd_con    = mean(c(sd(Con24,   na.rm = TRUE), sd(Con19,    na.rm = TRUE))) / 100,
     sd_ld     = mean(c(sd(LD24,    na.rm = TRUE), sd(LD19,     na.rm = TRUE))) / 100,

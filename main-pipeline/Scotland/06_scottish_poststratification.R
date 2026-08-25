@@ -8,7 +8,7 @@ prediction_grid_scottish <- voting_likely_scotland |>
     new_pcon, ageGroup_scot, 
     gender, p_education_level,
     housing_tenure_, past_vote_2024,
-    mortgage_owned, private_rented, Con_pc, scot_rem, 
+    mortgage_owner_loan_pct, private_rented_pct, Con_pc, scot_rem, 
     dep_index, 
     Lab24, Con24, LD24, SNP24, RUK24, Green24, Other24
   )
@@ -62,10 +62,11 @@ tenure_by_age_scotland <- read_csv(here("data","Excel-Files","tenure_by_age_scot
   mutate(
     new_pcon = tolower(new_pcon),
     scot_tenure = case_when(
-      str_detect(tenure, "^Owned") & !tenure %in% "Owned: Total" ~ "house_owned",
-      str_detect(tenure, "^Social Rented") ~ "house_rented",
-      str_detect(tenure, "^Private rented") & !tenure %in% "Private rented: Total" ~ "house_rented",
-      TRUE ~ NA_character_
+      str_detect(tenure, "^Owned") & !tenure %in% "Owned: Total" & str_detect(tenure, "mortgage")  ~ "mortgage_owner_loan_pct",
+      str_detect(tenure, "^Owned") & !tenure %in% "Owned: Total" & !str_detect(tenure, "mortgage") ~ "owned_outright",
+      str_detect(tenure, "^Social Rented")                                                         ~ "social_rented",
+      str_detect(tenure, "^Private rented") & !tenure %in% "Private rented: Total"                 ~ "private_rented",
+      TRUE                                                                                         ~ NA_character_
     ),
     ageGroup_scot = case_when(
       str_detect(age, "16 to 34")    ~ "16-34",

@@ -6,7 +6,7 @@
 prediction_grid_welsh <- voting_likely_wales |>
   distinct(
     new_pcon, ageGroup, gender, p_education_level, 
-    housing_tenure_, past_vote_2024, mortgage_owned, private_rented,
+    housing_tenure_, past_vote_2024, mortgage_owner_loan_pct, private_rented_pct,
     con_pct, index_dep_wales, welsh_speaking,
     Lab24, Con24, LD24, RUK24, Green24, PC24, Other24
   )
@@ -59,17 +59,11 @@ tenure_by_age_wales <- tenure_by_age_wales |>
     ),
     
     tenure_type = case_when(
-      tenure %in% c(
-        "Owned: Owns outright",
-        "Owned: Owns with a mortgage or loan or shared ownership"
-      ) ~ "house_owned",
-      tenure %in% c(
-        "Social rented: Rents from council or Local Authority",
-        "Social rented: Other social rented",
-        "Private rented: Private landlord or letting agency",
-        "Private rented: Other private rented or lives rent free"
-      ) ~ "house_rented",
-      TRUE ~ NA_character_
+      tenure == "Owned: Owns outright" ~ "owned_outright",
+      tenure == "Owned: Owns with a mortgage or loan or shared ownership"                                            ~ "mortgage_owner_loan",
+      tenure %in% c("Social rented: Rents from council or Local Authority", "Social rented: other social rented")    ~ "social_rented",
+      tenure %in% c("Private rented: Private landlord or letting agency", "other private rented or lives rent free") ~ "private_rented",
+      TRUE                                                                                                           ~ NA_character_
     )
   ) |>
   filter(!is.na(age_group_harmonised), !is.na(tenure_type)) |>
