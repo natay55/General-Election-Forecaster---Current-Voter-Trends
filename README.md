@@ -33,11 +33,11 @@ For my English model, I have the following predictors:
    - Ethnicity
    - Individual Brexit Vote (arguably, this plays multiple roles*)
    - Population Density of each Constituency
-   - Chris Hanretty estimate of Brexit leave share of a constituency (*)
    - Percentage of Muslims in a constituency (**)
 - The Economy
    - Individual housing tenure
    - Percentage of renters in a constituency
+   - Percentage of home owners with a mortgage / loan
    - Index of multiple deprivation
  
 My Welsh model was more or less the same, as was my Scottish model; however, the BES internet panel data was extremely thin for both Scotland and Wales, so to avoid overfitting, predictors were reduced compared to England. For Scotland, my model includes the age group; gender; education level; housing tenure; past vote; percentage of renters; percentage of degree holders; party share in the 2024 election and deprivation index. However, instead of attitudes towards Brexit, **I added the constituency estimate for an remain vote (i.e. for Scotland to stay as part of the UK)**, which proved to be extremely useful in picking up the conservative vote. The Welsh model had the same base predictors as the Scottish model, but instead of attitudes to independence / Brexit, **I added the percentage of Welsh speakers in each constituency**; this managed to boost the Plaid Cymru vote shares (which were almost none before adding this to my models)
