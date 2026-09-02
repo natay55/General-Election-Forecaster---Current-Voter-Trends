@@ -27,9 +27,14 @@ mrp_national <- constituency_vote_shares |>
 # - Other support reflects candidate specific local effects not captured
 #   by national polling — previous vote share is more informative
 
+# Calculate the flat additive difference needed to conform to the aggregator
+# Calculate the flat additive difference for ALL parties
 calibration <- mrp_national |>
   left_join(aggregator_shares, by = "party") |>
-  mutate(ratio = aggregator_mean / mrp_mean)
+  mutate(
+    ratio = aggregator_mean / mrp_mean
+  )
+    
 
 constituency_vote_shares_calibrated <- constituency_vote_shares |>
   left_join(calibration |> select(party, ratio), by = "party") |>
@@ -37,6 +42,7 @@ constituency_vote_shares_calibrated <- constituency_vote_shares |>
   group_by(new_pcon) |>
   mutate(vote_share = vote_share / sum(vote_share)) |>
   ungroup()
+
 
 #-------------------------------------------------------------------------------------------
 # Unwinding
@@ -78,6 +84,7 @@ constituency_unwound <- constituency_vote_shares_calibrated |>
     scaling_ratio = historical_sd / current_sd,
     vote_share    = case_when(
       # Symmetric unwinding — parties expected to revert to historical norms relative to the 2024 GE
+      # Labour and Lib Dem reverting to 2024 performance, whereas others doing worse / better
       party %in% c("Labour", "Conservative", "Brexit Party/Reform UK") ~
         national_mean + (vote_share - national_mean) * scaling_ratio,
       # Asymmetric unwinding — parties in structural geographic realignment

@@ -20,25 +20,11 @@ mrp_national_scottish <- constituency_vote_shares_scotland |>
   group_by(party) |>
   summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
 
-#-------------------------------------------------------------------------------------------
-# Scottish calibration note
-#
-# All party calibration ratios are set to aggregator_mean / mrp_mean for Scotland.
-# Unlike the English model — where parties with spatial lag predictors and sufficient
-# BES data are trusted over the aggregator (ratio = 1) — the Scottish BES sample
-# is too thin (mean 38 respondents per constituency) to reliably estimate geographic
-# variation beyond national swing. This is evidenced by MRP predictions converging
-# with proportional swing for Scotland.
-#
-# Spatial lag predictors are included for methodological consistency but the
-# calibration anchors all predictions to the Scottish polling aggregator.
-
 calibration_scotland <- mrp_national_scottish |>
   left_join(aggregator_shares_scottish, by = "party") |>
   mutate(
     ratio = aggregator_mean / mrp_mean,
-    # Only apply calibration where MRP and aggregator agree within 5 percentage points
-    ratio = if_else(abs(mrp_mean - aggregator_mean) > 0.05, 1, ratio)
+    ratio = if_else(abs(aggregator_mean - mrp_mean) < 0.03, ratio, 1)
   )
 
 constituency_vote_shares_calibrated_scotland <- constituency_vote_shares_scotland |>
@@ -47,7 +33,8 @@ constituency_vote_shares_calibrated_scotland <- constituency_vote_shares_scotlan
   group_by(new_pcon) |>
   mutate(vote_share = vote_share / sum(vote_share)) |>
   ungroup()
-constituency_vote_shares_calibrated_scotland
+
+
 #-------------------------------------------------------------------------------------------
 # Unwinding
 # Following YouGov's methodology — corrects MRP tendency to compress
@@ -71,13 +58,13 @@ constituency_vote_shares_calibrated_scotland
 historical_dist_scot <- bes_elections |>
   filter(Country == "Scotland") |>
   summarise(
-    sd_lab    = mean(c(sd(Lab24,   na.rm = TRUE), sd(Lab19,    na.rm = TRUE))) / 100,
-    sd_snp    = mean(c(sd(SNP24,   na.rm = TRUE), sd(SNP19,    na.rm = TRUE))) / 100,
-    sd_con    = mean(c(sd(Con24,   na.rm = TRUE), sd(Con19,    na.rm = TRUE))) / 100,
-    sd_ld     = mean(c(sd(LD24,    na.rm = TRUE), sd(LD19,     na.rm = TRUE))) / 100,
-    sd_green  = mean(c(sd(Green24, na.rm = TRUE), sd(Green19,  na.rm = TRUE))) / 100,
-    sd_other  = mean(c(sd(Other24, na.rm = TRUE), sd(Other19,  na.rm = TRUE))) / 100,
-    sd_reform = mean(c(sd(RUK24,   na.rm = TRUE), sd(Brexit19, na.rm = TRUE))) / 100
+    sd_lab    = sd(Lab24,    na.rm = TRUE) / 100,
+    sd_snp    = sd(SNP24,    na.rm = TRUE) / 100,
+    sd_con    = sd(Con24,    na.rm = TRUE) / 100,
+    sd_ld     = sd(LD24,     na.rm = TRUE) / 100,
+    sd_green  = sd(Green24,  na.rm = TRUE)  / 100,
+    sd_other  = sd(Other24,  na.rm = TRUE) / 100,
+    sd_reform = sd(RUK24,    na.rm = TRUE) / 100
   )
 
 party_sd_map_scotland <- list(

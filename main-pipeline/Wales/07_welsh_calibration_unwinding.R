@@ -21,18 +21,11 @@ mrp_national_wales <- constituency_vote_shares_wales |>
   group_by(party) |>
   summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
 
-# Calibration ratios — anchors demographically driven parties to aggregator
-# Liberal Democrat and Other set to ratio = 1 (no calibration) because:
-# - LD support reflects place effects beyond demographics — spatial lag
-#   captures this geographic signal which calibration would undo
-# - Other support reflects candidate specific local effects not captured
-#   by national polling — previous vote share is more informative
-calibration_wales <- mrp_national_wales|>
+calibration_wales <- mrp_national_wales |>
   left_join(aggregator_shares_wales, by = "party") |>
   mutate(
     ratio = aggregator_mean / mrp_mean,
-    # Only apply calibration where MRP and aggregator agree within 5 percentage points
-    ratio = if_else(abs(mrp_mean - aggregator_mean) > 0.05, 1, ratio)
+    ratio = if_else(abs(aggregator_mean - mrp_mean) < 0.03, ratio, 1)
   )
 
 constituency_vote_shares_calibrated_wales <- constituency_vote_shares_wales |>
@@ -55,13 +48,14 @@ constituency_vote_shares_calibrated_wales <- constituency_vote_shares_wales |>
 historical_dist_wales <- bes_elections |>
   filter(Country == "Wales") |>
   summarise(
-    sd_lab    = mean(c(sd(Lab24,   na.rm = TRUE), sd(Lab19,     na.rm = TRUE))) / 100,
-    sd_con    = mean(c(sd(Con24,   na.rm = TRUE), sd(Con19,     na.rm = TRUE))) / 100,
-    sd_ld     = mean(c(sd(LD24,    na.rm = TRUE), sd(LD19,      na.rm = TRUE))) / 100,
-    sd_green  = mean(c(sd(Green24, na.rm = TRUE), sd(Green19,   na.rm = TRUE))) / 100,
-    sd_pc    = mean(c(sd(PC24,   na.rm = TRUE), sd(PC19,     na.rm = TRUE))) / 100,
-    sd_other  = mean(c(sd(Other24, na.rm = TRUE), sd(Other19,   na.rm = TRUE))) / 100,
-    sd_reform = mean(c(sd(RUK24,   na.rm = TRUE), sd(Brexit19, na.rm = TRUE))) / 100
+    # 2024 only — parties undergoing structural geographic realignment
+    sd_lab    =  sd(Lab24,   na.rm = TRUE) / 100,
+    sd_reform =  sd(RUK24,   na.rm = TRUE) / 100,
+    sd_con    =  sd(Con24,   na.rm = TRUE) / 100,
+    sd_ld     =  sd(LD24,    na.rm = TRUE) / 100,
+    sd_green  =  sd(Green24, na.rm = TRUE) / 100,
+    sd_pc     =  sd(PC24,    na.rm = TRUE) / 100,
+    sd_other  =  sd(Other24, na.rm = TRUE) / 100
   )
 
 party_sd_map_wales <- list(

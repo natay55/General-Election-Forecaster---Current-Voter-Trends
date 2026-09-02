@@ -23,6 +23,8 @@ bes_elections <- bes_elections |>
     new_pcon         = ConstituencyName
   )
 
+bes$wt
+
 #-------------------------------------------------------------------------------------------
 # Filter BES to each nation and create likely voter samples
 
