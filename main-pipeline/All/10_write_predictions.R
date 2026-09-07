@@ -2,7 +2,7 @@
 #Write Constituency seat estimates to an excel file to use for the frontend
 
 # England
-england_constituency <- constituency_unwound |>
+england_constituency <- constituency_vote_shares_calibrated |>
   group_by(new_pcon) |>
   slice_max(vote_share, n = 1, with_ties = FALSE) |>
   ungroup() |>
@@ -10,7 +10,7 @@ england_constituency <- constituency_unwound |>
   mutate(nation = "England")
 
 # Scotland
-scotland_constituency <- constituency_unwound_scotland |>
+scotland_constituency <- constituency_vote_shares_calibrated_scotland |>
   group_by(new_pcon) |>
   slice_max(vote_share, n = 1, with_ties = FALSE) |>
   ungroup() |>
@@ -18,7 +18,7 @@ scotland_constituency <- constituency_unwound_scotland |>
   mutate(nation = "Scotland")
 
 # Wales
-wales_constituency <- constituency_unwound_wales |>
+wales_constituency <- constituency_vote_shares_calibrated_wales |>
   group_by(new_pcon) |>
   slice_max(vote_share, n = 1, with_ties = FALSE) |>
   ungroup() |>
