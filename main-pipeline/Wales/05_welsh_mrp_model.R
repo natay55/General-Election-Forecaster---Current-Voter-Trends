@@ -13,22 +13,26 @@ party_share_map_wales <- list(
   "Other"                  = "Other24"
 )
 
-# Individual and constituency level predictors
-# Individual: demographics and political identity
-# Constituency: contextual effects on vote intention
-BASE_VARS_WALES <- c(
-  "ageGroup",           # age group
-  "gender",             # sex
-  "p_education_level",  # qualifications — graduate/non-graduate divide
-  "housing_tenure_",    # tenure — renter/owner political divide
-  "past_vote_2024",     # 2024 GE vote — strongest individual predictor
-  "mortgage_owner_loan_pct",     #Proportion of mortgage buyers in a constituency
-  "private_rented_pct",     #Proportion of private renters in a constituency
-  "con_pct",            # constituency degree holders percentage
-  "party_share_24",     # party specific 2024 constituency vote share
-  "welsh_speaking",        # Percentage of Welsh speakers in each constituency
-  "index_dep_wales"     # Welsh Index of Multiple Deprivation (WIMD)
+FIXED_DEMO_VARS_WALES <- c(
+  "gender",                # sex
+  "ageGroup",              # age group of individual voter
+  "p_education_level",     # qualifications — graduate/non-graduate divide
+  "housing_tenure_"        # housing tenure of individual
 )
+
+FIXED_CONTEXT_VARS_WALES <- c(
+  "mortgage_owner_loan_pct",            # Proportion of those home owners with a mortgage or a loan
+  "private_rented_pct",                 # Proportion of those who are privately renting
+  "con_pct",                            # constituency degree holders percentage
+  "welsh_speaking",                     # percentage of Welsh speakers in each constituency
+  "party_share_24",                     # party specific 2024 constituency vote share
+  "index_dep_wales"                     # Index of Multiple Deprivation
+)
+
+RANDOM_DEMO_VARS_WALES <- c(
+  "(1 | past_vote_2024)"    
+)
+
 
 parties_of_interest_wales <- c(
   "Labour",
@@ -55,10 +59,13 @@ if (file.exists(here("data","Models","Wales","party_models_wales.rds"))) {
         party_share_24 = .data[[party_share_map_wales[[party]]]]
       )
     
+    fixed_effects_wales <- if (!is.null(spatial_var)) c(FIXED_DEMO_VARS_WALES, FIXED_CONTEXT_VARS_WALES) else c(FIXED_DEMO_VARS_WALES, FIXED_CONTEXT_VARS_WALES)
+    
     formula_str_wales <- paste(
       "vote ~",
-      paste(BASE_VARS_WALES, collapse = " + "),
-      "+ (1 | new_pcon)"
+      paste(fixed_effects_wales, collapse = " + "), "+",
+      paste(RANDOM_DEMO_VARS_WALES, collapse = " + "),
+      "+ (1 | new_pcon)" # Constituency random intercept baseline
     )
     
     party_models_wales[[party]] <- glmer(

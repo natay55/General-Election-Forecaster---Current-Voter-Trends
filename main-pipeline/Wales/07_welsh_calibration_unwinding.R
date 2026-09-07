@@ -21,19 +21,59 @@ mrp_national_wales <- constituency_vote_shares_wales |>
   group_by(party) |>
   summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
 
-calibration_wales <- mrp_national_wales |>
-  left_join(aggregator_shares_wales, by = "party") |>
-  mutate(
-    ratio = aggregator_mean / mrp_mean,
-    ratio = if_else(abs(aggregator_mean - mrp_mean) < 0.03, ratio, 1)
-  )
+target_proportion <- setNames(as.list(aggregator_shares_wales$aggregator_mean), aggregator_shares_wales$party)
 
-constituency_vote_shares_calibrated_wales <- constituency_vote_shares_wales |>
-  left_join(calibration_wales |> select(party, ratio), by = "party") |>
-  mutate(vote_share = vote_share * ratio) |>
+logit <- function(p){
+  return (log(p / (1-p)))
+}
+
+logit_shift <- function(party = party) {
+  
+  target <- target_proportion[[party]]
+  
+  raw_votes_target <- constituency_vote_shares_wales |> 
+    filter(party == !!party) |> 
+    pull(vote_share)
+  
+  f_general <- function(vote_share, delta) {
+    return (
+      exp(logit(vote_share) + delta) / ((exp(logit(vote_share) + delta)) + (1 - vote_share))
+    )
+  }
+  
+  f <- function(delta) {
+    return (mean(f_general(raw_votes_target, delta)) - target)
+  }
+  
+  solution <- uniroot(f, interval = c(-10, 10))$root
+  
+  adjusted_vote_shares_wales <- constituency_vote_shares_wales |>
+    filter(party == !!party) |>
+    mutate(
+      vote_share = f_general(vote_share, solution)
+    )
+  
+  return(adjusted_vote_shares_wales)
+}
+
+# Create an empty data frame to collect results from the loop
+constituency_vote_shares_calibrated_wales<- data.frame()
+
+for(parties in parties_of_interest_wales) {
+  calibrated_party_wales <- logit_shift(party = parties)
+  constituency_vote_shares_calibrated_wales <- bind_rows(constituency_vote_shares_calibrated_wales, calibrated_party_wales)
+}
+
+# Add any remaining uncalibrated parties back in and normalise across constituencies
+uncalibrated_parties_wales <- constituency_vote_shares_wales |> 
+  filter(!party %in% parties_of_interest_wales)
+
+constituency_vote_shares_calibrated_wales <- bind_rows(constituency_vote_shares_calibrated_wales, uncalibrated_parties_wales) |> 
   group_by(new_pcon) |>
   mutate(vote_share = vote_share / sum(vote_share)) |>
   ungroup()
+
+
 #-------------------------------------------------------------------------------------------
 # Unwinding
 # Following YouGov's methodology — corrects MRP tendency to compress

@@ -20,16 +20,54 @@ mrp_national_scottish <- constituency_vote_shares_scotland |>
   group_by(party) |>
   summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
 
-calibration_scotland <- mrp_national_scottish |>
-  left_join(aggregator_shares_scottish, by = "party") |>
-  mutate(
-    ratio = aggregator_mean / mrp_mean,
-    ratio = if_else(abs(aggregator_mean - mrp_mean) < 0.03, ratio, 1)
-  )
+target_proportion <- setNames(as.list(aggregator_shares_scottish$aggregator_mean), aggregator_shares_scottish$party)
 
-constituency_vote_shares_calibrated_scotland <- constituency_vote_shares_scotland |>
-  left_join(calibration_scotland |> select(party, ratio), by = "party") |>
-  mutate(vote_share = vote_share * ratio) |>
+logit <- function(p){
+  return (log(p / (1-p)))
+}
+
+logit_shift <- function(party = party) {
+  
+  target <- target_proportion[[party]]
+  
+  raw_votes_target <- constituency_vote_shares_scotland |> 
+    filter(party == !!party) |> 
+    pull(vote_share)
+  
+  f_general <- function(vote_share, delta) {
+    return (
+      exp(logit(vote_share) + delta) / ((exp(logit(vote_share) + delta)) + (1 - vote_share))
+    )
+  }
+  
+  f <- function(delta) {
+    return (mean(f_general(raw_votes_target, delta)) - target)
+  }
+  
+  solution <- uniroot(f, interval = c(-10, 10))$root
+  
+  adjusted_vote_shares_scotland <- constituency_vote_shares_scotland |>
+    filter(party == !!party) |>
+    mutate(
+      vote_share = f_general(vote_share, solution)
+    )
+  
+  return(adjusted_vote_shares_scotland)
+}
+
+# Create an empty data frame to collect results from the loop
+constituency_vote_shares_calibrated_scotland <- data.frame()
+
+for(parties in parties_of_interest_scotland) {
+  calibrated_party_scotland <- logit_shift(party = parties)
+  constituency_vote_shares_calibrated_scotland <- bind_rows(constituency_vote_shares_calibrated_scotland, calibrated_party_scotland)
+}
+
+# Add any remaining uncalibrated parties back in and normalise across constituencies
+uncalibrated_parties_scotland <- constituency_vote_shares_scotland |> 
+  filter(!party %in% parties_of_interest_scotland)
+
+constituency_vote_shares_calibrated_scotland <- bind_rows(constituency_vote_shares_calibrated_scotland, uncalibrated_parties_scotland) |> 
   group_by(new_pcon) |>
   mutate(vote_share = vote_share / sum(vote_share)) |>
   ungroup()

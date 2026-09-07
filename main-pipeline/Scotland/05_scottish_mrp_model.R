@@ -13,18 +13,24 @@ party_share_map_scottish <- list(
   "Other"                         = "Other24"
 )
 
-BASE_VARS_SCOTTISH <- c(
-  "ageGroup_scot",
-  "gender",
-  "p_education_level",
-  "housing_tenure_",
-  "past_vote_2024",
-  "scot_rem",
-  "mortgage_owner_loan_pct",
-  "private_rented_pct",
-  "Con_pc",
-  "party_share_24",
-  "dep_index"
+FIXED_DEMO_VARS_SCOTLAND <- c(
+  "gender",             # sex
+  "p_education_level",   # qualifications — graduate/non-graduate divide
+  "housing_tenure_"    # individual tenure type (e.g. rent, own home)
+)
+
+FIXED_CONTEXT_VARS_SCOTLAND <- c(
+  "mortgage_owner_loan_pct",      # Proportion of those home owners with a mortgage or a loan
+  "private_rented_pct",           # Proportion of those who are privately renting
+  "Con_pc",                       # constituency degree holders percentage
+  "scot_rem",                     # voted to remain in Scottish independence referendum
+  "party_share_24",               # party specific 2024 constituency vote share
+  "dep_index"                     # Index of Multiple Deprivation
+)
+
+RANDOM_DEMO_VARS_SCOTLAND <- c(
+  "(1 | ageGroup_scot)",             
+  "(1 | past_vote_2024)"    
 )
 
 parties_of_interest_scotland <- c(
@@ -63,6 +69,8 @@ if (file.exists(PARTY_MODELS_SCOTLAND_PATH)) {
         )
       )
     
+    fixed_effects_scotland <- if (!is.null(spatial_var)) c(FIXED_DEMO_VARS_SCOTLAND, FIXED_CONTEXT_VARS_SCOTLAND) else c(FIXED_DEMO_VARS_SCOTLAND, FIXED_CONTEXT_VARS_SCOTLAND)
+    
     if (party == "Brexit Party/Reform UK") {
       # Reform uses glmer with 2024 vote share as offset
       # Offset acts as informative prior on constituency random effect
@@ -75,21 +83,23 @@ if (file.exists(PARTY_MODELS_SCOTLAND_PATH)) {
           )
         )
       
-      formula_str <- paste(
+      formula_str_scotland <- paste(
         "vote ~",
-        paste(BASE_VARS_SCOTTISH, collapse = " + "),
-        "+ offset(ruk24_offset) + (1 | new_pcon)"
+        paste(fixed_effects_scotland, collapse = " + "), "+",
+        paste(RANDOM_DEMO_VARS_SCOTLAND, collapse = " + "),
+        "+ (1 | new_pcon) + offset(ruk24_offset)"
       )
     } else {
-      formula_str <- paste(
+      formula_str_scotland <- paste(
         "vote ~",
-        paste(BASE_VARS_SCOTTISH, collapse = " + "),
+        paste(fixed_effects_scotland, collapse = " + "), "+",
+        paste(RANDOM_DEMO_VARS_SCOTLAND, collapse = " + "),
         "+ (1 | new_pcon)"
       )
     }
     
     party_models_scotland[[party]] <- glmer(
-      as.formula(formula_str),
+      as.formula(formula_str_scotland),
       data    = party_data,
       control = glmerControl(autoscale = TRUE),
       family  = binomial(link = "logit")

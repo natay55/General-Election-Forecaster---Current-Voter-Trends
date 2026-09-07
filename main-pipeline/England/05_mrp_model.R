@@ -17,30 +17,40 @@ party_share_map <- list(
 # applying spatial lags to all parties but only including in formula
 # for parties where geographic clustering drives support beyond demographics
 spatial_lag_map <- list(
-  "Labour"           = "spatial_lag_lab",
-  "Conservative"     = "spatial_lag_con",
-  "Liberal Democrat" = "spatial_lag_ld",
-  "Green Party"      = "spatial_lag_green"
+  "Labour"                 = "spatial_lag_lab",
+  "Conservative"           = "spatial_lag_con",
+  "Green Party"            = "spatial_lag_green",
+  "Brexit Party/Reform UK" = "spatial_lag_reform",
+  "Liberal Democrat"       = "spatial_lag_ld"
 )
 
-# Individual and constituency level predictors
-# Individual: demographics and political identity
-# Constituency: contextual effects on vote intention
-BASE_VARS <- c(
-  "ageGroup",           # age group — strong predictor of vote intention
-  "ethnicity_harmonised", # ethnicity — individual level,
-  "p_eurefvote",         #Brexit vote (leave or remain)
-  "gender",             # sex
-  "p_education_level",  # qualifications — graduate/non-graduate divide
-  "housing_tenure_",    # tenure — renter/owner political divide
-  "past_vote_2024",     # 2024 GE vote — strongest individual predictor
-  "density",            # population density — urban/rural divide
-  "mortgage_owner_loan_pct",     # Proportion of those home owners with a mortgage or a loan
-  "private_rented_pct",     # Proportion of those who are privately renting
-  "con_pct",            # constituency degree holders percentage
-  "muslim_pct",         # constituency Muslim population — community political effects
-  "party_share_24",     # party specific 2024 constituency vote share,
-  "index"               # Index of Multiple Deprivation
+# FIXED INDIVIDUAL BASELINES: Dominant, evenly-distributed demographic baselines.
+# Large enough across the BES sample to stay safely fixed without causing unobserved cells.
+FIXED_DEMO_VARS <- c(
+  "gender",              # sex
+  "ageGroup",            # Age group of individual
+  "p_education_level",   # qualifications — graduate/non-graduate divide
+  "housing_tenure_",     # Type of hosuing tenure of an individual
+  "ethnicity_harmonised" #Ethnicity of individual
+)
+
+# FIXED CONSTITUENCY CONTEXT: Continuous macro-level census variables 
+FIXED_CONTEXT_VARS <- c(
+  "density",                  # population density — urban/rural divide
+  "mortgage_owner_loan_pct",  # Proportion of those home owners with a mortgage or a loan
+  "private_rented_pct",       # Proportion of those who are privately renting
+  "con_pct",                  # constituency degree holders percentage
+  "muslim_pct",               # constituency Muslim population — community political effects
+  "party_share_24",           # party specific 2024 constituency vote share
+  "index"                     # Index of Multiple Deprivation
+)
+
+# RANDOM DEMOGRAPHIC INTERCEPTS: Individual demographics and political backgrounds 
+# prone to geographic clustering or small/empty cell counts inside individual constituencies.
+# Converting these to random effects invokes shrinkage to protect sparse cells from overfitting.
+RANDOM_DEMO_VARS <- c(
+  "(1 | past_vote_2024)",     #Random effect of past vote
+  "(1 | p_eurefvote)"         #Random effect of Brexit vote
 )
 
 parties_of_interest <- c(
@@ -79,18 +89,20 @@ if (file.exists(here("data", "Models","England","party_models.rds"))) {
     
     # Add spatial lag for geographically driven parties
     spatial_var <- spatial_lag_map[[party]]
-    all_vars    <- if (!is.null(spatial_var)) c(BASE_VARS, spatial_var) else BASE_VARS
+    fixed_effects <- if (!is.null(spatial_var)) c(FIXED_DEMO_VARS, FIXED_CONTEXT_VARS, spatial_var) else c(FIXED_DEMO_VARS, FIXED_CONTEXT_VARS)
     
+    # Construct formula separating true fixed coefficients from partial-pooling random blocks
     formula_str <- paste(
       "vote ~",
-      paste(all_vars, collapse = " + "),
-      "+ (1 | new_pcon)"
+      paste(fixed_effects, collapse = " + "), "+",
+      paste(RANDOM_DEMO_VARS, collapse = " + "),
+      "+ (1 | new_pcon)" # Constituency random intercept baseline
     )
     
     party_models[[party]] <- glmer(
       as.formula(formula_str),
       data    = party_data,
-      control = glmerControl(autoscale = TRUE),
+      control = glmerControl(autoscale=TRUE),
       family  = binomial(link = "logit")
     )
     
