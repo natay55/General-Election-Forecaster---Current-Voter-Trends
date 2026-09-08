@@ -1,4 +1,41 @@
 #-------------------------------------------------------------------------------------------
+#Symmetric Calibration
+aggregator_shares_scottish <- summary_table_scottish |>
+  mutate(party = case_when(
+    Party == "Reform%" ~ "Brexit Party/Reform UK",
+    Party == "LAB%"    ~ "Labour",
+    Party == "CON%"    ~ "Conservative",
+    Party == "LIB%"    ~ "Liberal Democrat",
+    Party == "Green%"  ~ "Green Party",
+    Party == "SNP%"    ~ "Scottish National Party (SNP)",
+    Party == "other"   ~ "Other"
+  )) |>
+  group_by(party)|>
+  summarise(share = sum(mean), .groups="drop")|>
+  ungroup()|>
+  select(party, aggregator_mean = share)
+
+# MRP implied national vote shares
+mrp_national_scottish <- constituency_vote_shares_scotland |>
+  group_by(party) |>
+  summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
+
+calibration_scotland <- mrp_national_scottish |>
+  left_join(aggregator_shares_scottish, by = "party") |>
+  mutate(
+    ratio = aggregator_mean / mrp_mean,
+    ratio = if_else(abs(aggregator_mean - mrp_mean) < 0.03, ratio, 1)
+  )
+
+constituency_vote_shares_calibrated_scotland <- constituency_vote_shares_scotland |>
+  left_join(calibration_scotland |> select(party, ratio), by = "party") |>
+  mutate(vote_share = vote_share * ratio) |>
+  group_by(new_pcon) |>
+  mutate(vote_share = vote_share / sum(vote_share)) |>
+  ungroup()
+
+
+#-------------------------------------------------------------------------------------------
 # Unwinding
 # Following YouGov's methodology — corrects MRP tendency to compress
 # geographic distributions through partial pooling
@@ -41,92 +78,17 @@ party_sd_map_scotland <- list(
 )
 
 
-constituency_unwound_scotland <- constituency_vote_shares_scotland |>
+constituency_unwound_scotland <- constituency_vote_shares_calibrated_scotland |>
   group_by(party) |>
   mutate(
     national_mean = mean(vote_share),
-    historical_sd = party_sd_map_scotland[[party[1]]],
+    historical_sd = party_sd_map_scotland[[cur_group()$party]],
     current_sd    = sd(vote_share),
     scaling_ratio = historical_sd / current_sd,
     vote_share    = national_mean + (vote_share - national_mean) * scaling_ratio,
     vote_share    = pmax(vote_share, 0)
   ) |>
   ungroup() |>
-  group_by(new_pcon) |>
-  mutate(vote_share = vote_share / sum(vote_share)) |>
-  ungroup()
-
-
-#-------------------------------------------------------------------------------------------
-#Symmetric Calibration
-aggregator_shares_scottish <- summary_table_scottish |>
-  mutate(party = case_when(
-    Party == "Reform%" ~ "Brexit Party/Reform UK",
-    Party == "LAB%"    ~ "Labour",
-    Party == "CON%"    ~ "Conservative",
-    Party == "LIB%"    ~ "Liberal Democrat",
-    Party == "Green%"  ~ "Green Party",
-    Party == "SNP%"    ~ "Scottish National Party (SNP)",
-    Party == "other"   ~ "Other"
-  )) |>
-  group_by(party)|>
-  summarise(share = sum(mean), .groups="drop")|>
-  ungroup()|>
-  select(party, aggregator_mean = share)
-
-# MRP implied national vote shares
-mrp_national_scottish <- constituency_unwound_scotland |>
-  group_by(party) |>
-  summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
-
-target_proportion <- setNames(as.list(aggregator_shares_scottish$aggregator_mean), aggregator_shares_scottish$party)
-
-logit <- function(p){
-  return (log(p / (1-p)))
-}
-
-logit_shift <- function(party = party) {
-  
-  target <- target_proportion[[party]]
-  
-  raw_votes_target <- constituency_unwound_scotland |> 
-    filter(party == !!party) |> 
-    pull(vote_share)
-  
-  f_general <- function(vote_share, delta) {
-    return (
-      exp(logit(vote_share) + delta) / ((exp(logit(vote_share) + delta)) + (1 - vote_share))
-    )
-  }
-  
-  f <- function(delta) {
-    return (mean(f_general(raw_votes_target, delta)) - target)
-  }
-  
-  solution <- uniroot(f, interval = c(-10, 10))$root
-  
-  adjusted_vote_shares_scotland <- constituency_unwound_scotland |>
-    filter(party == !!party) |>
-    mutate(
-      vote_share = f_general(vote_share, solution)
-    )
-  
-  return(adjusted_vote_shares_scotland)
-}
-
-# Create an empty data frame to collect results from the loop
-constituency_vote_shares_calibrated_scotland <- data.frame()
-
-for(parties in parties_of_interest_scotland) {
-  calibrated_party_scotland <- logit_shift(party = parties)
-  constituency_vote_shares_calibrated_scotland <- bind_rows(constituency_vote_shares_calibrated_scotland, calibrated_party_scotland)
-}
-
-# Add any remaining uncalibrated parties back in and normalise across constituencies
-uncalibrated_parties_scotland <- constituency_unwound_scotland |> 
-  filter(!party %in% parties_of_interest_scotland)
-
-constituency_vote_shares_calibrated_scotland <- bind_rows(constituency_vote_shares_calibrated_scotland, uncalibrated_parties_scotland) |> 
   group_by(new_pcon) |>
   mutate(vote_share = vote_share / sum(vote_share)) |>
   ungroup()
