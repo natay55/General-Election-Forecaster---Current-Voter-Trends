@@ -3,32 +3,36 @@
 # Following the MRP framework — predict for each cell, then poststratify
 
 # Prediction grid — unique combinations of all predictors across constituencies
+# Added `current_winner` to compute incumbency per constituency/party pair
 prediction_grid_scottish <- voting_likely_scotland |>
   distinct(
     new_pcon, ageGroup_scot, 
     gender, p_education_level,
     housing_tenure_, past_vote_2024,
     mortgage_owner_loan_pct, private_rented_pct, Con_pc, scot_rem, 
-    dep_index, 
+    dep_index, current_winner,
     Lab24, Con24, LD24, SNP24, RUK24, Green24, Other24
   )
 
 prediction_grid_scottish <- imap_dfr(party_models_scotland, function(model, party) {
   
+  # 1. Compute is_incumbent dynamically for the current party
   grid <- prediction_grid_scottish |>
-    mutate(party_share_24 = .data[[party_share_map_scottish[[party]]]])
+    mutate(
+      is_incumbent = if_else(!is.na(current_winner) & current_winner == party, 1L, 0L)
+    )
   
-  # Add offset for Reform only to anchor Reform voters to past constituency performance 
-  # (since data from 7 constituencies was missing and we failed to find a random constituency effect)
+  # 2. Add offset safely for Reform UK
   if (party == "Brexit Party/Reform UK") {
     grid <- grid |>
       mutate(
-        ruk24_offset = log(
-          pmax(RUK24, 0.001) / (1 - pmax(pmin(RUK24, 0.999), 0.001))
-        )
+        RUK24_clean   = dplyr::coalesce(RUK24, 0),
+        RUK24_clamped = pmax(pmin(RUK24_clean, 0.999), 0.001),
+        ruk24_offset  = log(RUK24_clamped / (1 - RUK24_clamped))
       )
   }
   
+  # 3. Generate predictions
   grid |>
     mutate(
       predicted = predict(
@@ -50,8 +54,8 @@ voting_likely_scotland <- voting_likely_scotland |>
       ageGroup %in% c("18-25", "26-35") ~ "16-34",
       ageGroup %in% c("36-45", "46-55") ~ "35-49",
       ageGroup %in% c("56-65")          ~ "50-64",
-      ageGroup == "66+"                  ~ "65+",
-      TRUE                               ~ NA_character_
+      ageGroup == "66+"                 ~ "65+",
+      TRUE                              ~ NA_character_
     )
   )
 
@@ -64,9 +68,9 @@ tenure_by_age_scotland <- read_csv(here("data","Excel-Files","tenure_by_age_scot
     scot_tenure = case_when(
       str_detect(tenure, "^Owned") & !tenure %in% "Owned: Total" & str_detect(tenure, "mortgage")  ~ "mortgage_owner_loan_pct",
       str_detect(tenure, "^Owned") & !tenure %in% "Owned: Total" & !str_detect(tenure, "mortgage") ~ "owned_outright",
-      str_detect(tenure, "^Social Rented")                                                         ~ "social_rented",
+      str_detect(tenure, "^Social Rented")                                                        ~ "social_rented",
       str_detect(tenure, "^Private rented") & !tenure %in% "Private rented: Total"                 ~ "private_rented",
-      TRUE                                                                                         ~ NA_character_
+      TRUE                                                                                        ~ NA_character_
     ),
     ageGroup_scot = case_when(
       str_detect(age, "16 to 34")    ~ "16-34",
@@ -121,7 +125,7 @@ qualification_sex_age <- read_csv(here("data","Excel-Files","qualification_by_se
   group_by(new_pcon) |>
   mutate(prop = total / sum(total)) |>
   ungroup()
-  
+
 voting_likely_scotland <- voting_likely_scotland |>
   left_join(
     qualification_sex_age |>

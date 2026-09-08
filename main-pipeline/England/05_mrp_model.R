@@ -41,7 +41,7 @@ FIXED_CONTEXT_VARS <- c(
   "private_rented_pct",       # Proportion of those who are privately renting
   "con_pct",                  # constituency degree holders percentage
   "muslim_pct",               # constituency Muslim population — community political effects
-  "party_share_24",           # party specific 2024 constituency vote share
+  "is_incumbent",             # Binary indicator for incumbency
   "index"                     # Index of Multiple Deprivation
 )
 
@@ -74,17 +74,7 @@ if (file.exists(here("data", "Models","England","party_models.rds"))) {
     party_data <- voting_likely_england |>
       mutate(
         vote           = if_else(vote_label == party, 1L, 0L),
-        raw_share      = if_else(
-          !is.na(by_election_share) & current_winner == party,
-          by_election_share,
-          .data[[party_share_map[[party]]]]
-        ),
-        # Boost incumbent party share above 1, non-incumbents stay below 1
-        party_share_24 = if_else(
-          current_winner == party,
-          1 + raw_share,
-          raw_share
-        )
+        is_incumbent   = if_else(current_winner == party, 1L, 0L)
       )
     
     # Add spatial lag for geographically driven parties

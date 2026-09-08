@@ -23,8 +23,6 @@ bes_elections <- bes_elections |>
     new_pcon         = ConstituencyName
   )
 
-bes$wt
-
 #-------------------------------------------------------------------------------------------
 # Filter BES to each nation and create likely voter samples
 
@@ -336,3 +334,13 @@ voting_likely_wales <- voting_likely_wales |>
       TRUE                                              ~ past_vote_2024
     )
   )
+
+#-------------------------------------------------------------------------------
+# Add the current holders of Welsh constituencies
+welsh_winners <- bes_elections |>
+  filter(Country == "Wales")|>
+  mutate(current_winner = Winner24)|>
+  select(new_pcon, current_winner)
+
+voting_likely_wales <- voting_likely_wales |>
+  left_join(welsh_winners, by="new_pcon")

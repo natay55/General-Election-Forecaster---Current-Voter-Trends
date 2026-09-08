@@ -18,16 +18,7 @@ prediction_grid_base <- voting_likely_england |>
 prediction_grid <- imap_dfr(party_models, function(model, party) {
   grid <- prediction_grid_base |>
     mutate(
-      raw_share = if_else(
-        !is.na(by_election_share) & current_winner == party,
-        by_election_share,
-        .data[[party_share_map[[party]]]]
-      ),
-      party_share_24 = if_else(
-        current_winner == party,
-        1 + raw_share,
-        raw_share
-      )
+      is_incumbent   = if_else(current_winner == party, 1L, 0L)
     )
   
   grid |>

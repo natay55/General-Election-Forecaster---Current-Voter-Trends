@@ -15,7 +15,9 @@ party_share_map_scottish <- list(
 
 FIXED_DEMO_VARS_SCOTLAND <- c(
   "gender",             # sex
+  "ageGroup_scot",
   "p_education_level",   # qualifications — graduate/non-graduate divide
+  "past_vote_2024",
   "housing_tenure_"    # individual tenure type (e.g. rent, own home)
 )
 
@@ -24,29 +26,24 @@ FIXED_CONTEXT_VARS_SCOTLAND <- c(
   "private_rented_pct",           # Proportion of those who are privately renting
   "Con_pc",                       # constituency degree holders percentage
   "scot_rem",                     # voted to remain in Scottish independence referendum
-  "party_share_24",               # party specific 2024 constituency vote share
+  "is_incumbent",                 # Incumbent indicator for current parties
   "dep_index"                     # Index of Multiple Deprivation
-)
-
-RANDOM_DEMO_VARS_SCOTLAND <- c(
-  "(1 | ageGroup_scot)",             
-  "(1 | past_vote_2024)"    
 )
 
 parties_of_interest_scotland <- c(
   "Labour",
   "Conservative",
   "Liberal Democrat",
+  "Scottish National Party (SNP)",
   "Green Party",
   "Brexit Party/Reform UK",
-  "Scottish National Party (SNP)",
   "Other"
 )
 
 #-------------------------------------------------------------------------------------------
 # Fit or load models
 
-PARTY_MODELS_SCOTLAND_PATH <- here("data","Models","Scotland","party_models_scotland.rds")
+PARTY_MODELS_SCOTLAND_PATH <- here("data", "Models", "Scotland", "party_models_scotland.rds")
 
 if (file.exists(PARTY_MODELS_SCOTLAND_PATH)) {
   party_models_scotland <- readRDS(PARTY_MODELS_SCOTLAND_PATH)
@@ -56,44 +53,43 @@ if (file.exists(PARTY_MODELS_SCOTLAND_PATH)) {
   for (party in parties_of_interest_scotland) {
     party_data <- voting_likely_scotland |>
       mutate(
-        vote           = if_else(vote_label == party, 1L, 0L),
-        raw_share      = if_else(
-          !is.na(by_election_share) & current_winner == party,
-          by_election_share,
-          .data[[party_share_map_scottish[[party]]]]
-        ),
-        party_share_24 = if_else(
-          current_winner == party,
-          1 + raw_share,
-          raw_share
-        )
+        vote         = if_else(vote_label == party, 1L, 0L),
+        is_incumbent = if_else(!is.na(current_winner) & current_winner == party, 1L, 0L)
       )
     
-    fixed_effects_scotland <- if (!is.null(spatial_var)) c(FIXED_DEMO_VARS_SCOTLAND, FIXED_CONTEXT_VARS_SCOTLAND) else c(FIXED_DEMO_VARS_SCOTLAND, FIXED_CONTEXT_VARS_SCOTLAND)
+    # 1. Dynamically remove 'is_incumbent' if the party won 0 seats (zero variance)
+    active_context_vars <- FIXED_CONTEXT_VARS_SCOTLAND
+    if (sum(party_data$is_incumbent, na.rm = TRUE) == 0) {
+      active_context_vars <- setdiff(active_context_vars, "is_incumbent")
+    }
     
+    fixed_effects_scotland <- c(FIXED_DEMO_VARS_SCOTLAND, active_context_vars)
+    
+    # 2. Filter out missing values in model variables prior to glmer evaluation
+    party_data <- party_data |> 
+      drop_na(all_of(c(fixed_effects_scotland, "vote", "new_pcon")))
+    
+    # 3. Model specification & offset logic
     if (party == "Brexit Party/Reform UK") {
       # Reform uses glmer with 2024 vote share as offset
-      # Offset acts as informative prior on constituency random effect
-      # Prevents demographic extrapolation from English patterns
-      # with sparse data (mean 7 Reform voters per constituency)
+      # Safe handling of missing values or zeroes in RUK24
       party_data <- party_data |>
         mutate(
-          ruk24_offset = log(
-            pmax(RUK24, 0.001) / (1 - pmax(pmin(RUK24, 0.999), 0.001))
-          )
-        )
+          RUK24_clean   = dplyr::coalesce(RUK24, 0),
+          RUK24_clamped = pmax(pmin(RUK24_clean, 0.999), 0.001),
+          ruk24_offset  = log(RUK24_clamped / (1 - RUK24_clamped))
+        ) |>
+        drop_na(ruk24_offset)
       
       formula_str_scotland <- paste(
         "vote ~",
-        paste(fixed_effects_scotland, collapse = " + "), "+",
-        paste(RANDOM_DEMO_VARS_SCOTLAND, collapse = " + "),
+        paste(fixed_effects_scotland, collapse = " + "),
         "+ (1 | new_pcon) + offset(ruk24_offset)"
       )
     } else {
       formula_str_scotland <- paste(
         "vote ~",
-        paste(fixed_effects_scotland, collapse = " + "), "+",
-        paste(RANDOM_DEMO_VARS_SCOTLAND, collapse = " + "),
+        paste(fixed_effects_scotland, collapse = " + "),
         "+ (1 | new_pcon)"
       )
     }

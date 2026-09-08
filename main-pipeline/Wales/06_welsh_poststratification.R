@@ -3,24 +3,30 @@
 # Following the MRP framework — predict for each cell, then poststratify
 
 # Prediction grid — unique combinations of all predictors across constituencies
+# Included `current_winner` to calculate incumbency per constituency/party pair
 prediction_grid_welsh <- voting_likely_wales |>
   distinct(
     new_pcon, ageGroup, gender, p_education_level, 
     housing_tenure_, past_vote_2024, mortgage_owner_loan_pct, private_rented_pct,
-    con_pct, index_dep_wales, welsh_speaking,
+    con_pct, index_dep_wales, welsh_speaking, current_winner,
     Lab24, Con24, LD24, RUK24, Green24, PC24, Other24
   )
 
 
 # Generate predicted vote probability for each party in each demographic cell
 predictions_welsh <- imap_dfr(party_models_wales, function(model, party) {
-  prediction_grid_welsh |>
+  
+  # Calculate is_incumbent for the current party iteration
+  grid_with_incumbency <- prediction_grid_welsh |>
     mutate(
-      party_share_24 = .data[[party_share_map_wales[[party]]]],
-      predicted      = predict(
+      is_incumbent = if_else(!is.na(current_winner) & current_winner == party, 1L, 0L)
+    )
+  
+  grid_with_incumbency |>
+    mutate(
+      predicted = predict(
         model,
-        newdata          = prediction_grid_welsh |>
-          mutate(party_share_24 = .data[[party_share_map_wales[[party]]]]),
+        newdata          = grid_with_incumbency,
         type             = "response",
         allow.new.levels = TRUE
       ),
@@ -69,6 +75,7 @@ tenure_by_age_wales <- tenure_by_age_wales |>
   filter(!is.na(age_group_harmonised), !is.na(tenure_type)) |>
   group_by(new_pcon, tenure_type, age_group_harmonised) |>
   summarise(total_tenure = sum(count, na.rm = TRUE), .groups = "drop")
+
 #-------------------------------------------------------------------------------------------
 # Harmonise sex and education categories to match BES variable coding
 
@@ -111,6 +118,7 @@ sex_edu_wales <- sex_edu_wales |>
   group_by(new_pcon) |>
   mutate(prop = total / sum(total)) |>
   ungroup()
+
 #-------------------------------------------------------------------------------------------
 # Compute poststratification weights
 
@@ -162,4 +170,3 @@ constituency_vote_shares_wales <- postrat_wales |>
   filter(n() == length(parties_of_interest_wales)) |>
   mutate(vote_share = vote_share / sum(vote_share)) |>
   ungroup()
-

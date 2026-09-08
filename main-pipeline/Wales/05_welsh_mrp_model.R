@@ -25,7 +25,7 @@ FIXED_CONTEXT_VARS_WALES <- c(
   "private_rented_pct",                 # Proportion of those who are privately renting
   "con_pct",                            # constituency degree holders percentage
   "welsh_speaking",                     # percentage of Welsh speakers in each constituency
-  "party_share_24",                     # party specific 2024 constituency vote share
+  "is_incumbent",                       # Incumbency indicator (Wales has had no by-elections or defections)
   "index_dep_wales"                     # Index of Multiple Deprivation
 )
 
@@ -56,10 +56,18 @@ if (file.exists(here("data","Models","Wales","party_models_wales.rds"))) {
     party_data <- voting_likely_wales |>
       mutate(
         vote           = if_else(vote_label == party, 1L, 0L),
-        party_share_24 = .data[[party_share_map_wales[[party]]]]
+        is_incumbent   = if_else(!is.na(current_winner) & current_winner == party, 1L, 0L)
       )
     
-    fixed_effects_wales <- if (!is.null(spatial_var)) c(FIXED_DEMO_VARS_WALES, FIXED_CONTEXT_VARS_WALES) else c(FIXED_DEMO_VARS_WALES, FIXED_CONTEXT_VARS_WALES)
+    active_context_vars <- FIXED_CONTEXT_VARS_WALES
+    if (sum(party_data$is_incumbent, na.rm = TRUE) == 0) {
+      active_context_vars <- setdiff(active_context_vars, "is_incumbent")
+    }
+    
+    fixed_effects_wales <- c(FIXED_DEMO_VARS_WALES, active_context_vars)
+    
+    party_data <- party_data |> 
+      drop_na(all_of(c(fixed_effects_wales, "vote", "new_pcon")))
     
     formula_str_wales <- paste(
       "vote ~",
