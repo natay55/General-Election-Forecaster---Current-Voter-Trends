@@ -54,6 +54,24 @@ scottish_deprivation <- read_xlsx(here("data","Excel-Files","uk_index.xlsx"), sh
   mutate(new_pcon=tolower(new_pcon))
 
 #-------------------------------------------------------------------------------------------
+# Get disabled per constituency and clean data
+disabled_by_con <- read_xlsx(
+  path = here("data", "Excel-Files", "disabled_by_const.xlsx"),
+  sheet = 4
+)
+
+disabled_by_con <- disabled_by_con |>
+  mutate(
+    new_pcon = tolower(`ConstituencyName`),
+    new_pcon = str_replace_all(new_pcon, "&", "and")
+  )|>
+  filter(`groups` == "Disabled")|>
+  group_by(new_pcon)|>
+  summarise(pct_disabled = sum(`percentage`), .groups="drop")|>
+  ungroup()|>
+  select(new_pcon, pct_disabled)
+
+#-------------------------------------------------------------------------------------------
 #Construct the population density (since no data freely available for Scotland)
 
 scottish_constituency_sf <- constituencies_sf |>
@@ -100,4 +118,24 @@ voting_likely_scotland <- voting_likely_scotland |>
 
 voting_likely_scotland <- voting_likely_scotland |>
   left_join(scottish_deprivation, by="new_pcon")
+
+#---------------------------------------------------------------------------------------------
+# Join percentage of disabled to Scottish constituencies
+voting_likely_scotland <- voting_likely_scotland |>
+  left_join(
+    disabled_by_con |>
+      filter(new_pcon %in% voting_likely_scotland$new_pcon)|>
+      select(new_pcon, pct_disabled),
+    by = "new_pcon"
+  )
+
+#----------------------------------------------------------------------------------------------
+# Join percentage of claimants to Scottish constituencies (read earlier from England and Wales)
+voting_likely_scotland <- voting_likely_scotland |>
+  left_join(
+    claimant_by_con |>
+      filter(new_pcon %in% voting_likely_scotland$new_pcon)|>
+      select(new_pcon, claimant_pct),
+    by = "new_pcon"
+  )
   

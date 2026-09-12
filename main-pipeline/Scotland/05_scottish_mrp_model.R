@@ -14,11 +14,11 @@ party_share_map_scottish <- list(
 )
 
 FIXED_DEMO_VARS_SCOTLAND <- c(
-  "gender",             # sex
-  "ageGroup_scot",
-  "p_education_level",   # qualifications — graduate/non-graduate divide
-  "past_vote_2024",
-  "housing_tenure_"    # individual tenure type (e.g. rent, own home)
+  "gender",                       # sex
+  "ageGroup_scot",                # age group
+  "p_education_level",            # qualifications — graduate/non-graduate divide
+  "past_vote_2024",               # 2024 general election baseline
+  "housing_tenure_"               # individual tenure type (e.g. rent, own home)
 )
 
 FIXED_CONTEXT_VARS_SCOTLAND <- c(
@@ -27,6 +27,8 @@ FIXED_CONTEXT_VARS_SCOTLAND <- c(
   "Con_pc",                       # constituency degree holders percentage
   "scot_rem",                     # voted to remain in Scottish independence referendum
   "is_incumbent",                 # Incumbent indicator for current parties
+  "claimant_pct",                 # Percentage of claimants in each constituency
+  "pct_disabled",                 # Percentage of disabled in each constituency
   "dep_index"                     # Index of Multiple Deprivation
 )
 
@@ -57,7 +59,6 @@ if (file.exists(PARTY_MODELS_SCOTLAND_PATH)) {
         is_incumbent = if_else(!is.na(current_winner) & current_winner == party, 1L, 0L)
       )
     
-    # 1. Dynamically remove 'is_incumbent' if the party won 0 seats (zero variance)
     active_context_vars <- FIXED_CONTEXT_VARS_SCOTLAND
     if (sum(party_data$is_incumbent, na.rm = TRUE) == 0) {
       active_context_vars <- setdiff(active_context_vars, "is_incumbent")
@@ -65,7 +66,6 @@ if (file.exists(PARTY_MODELS_SCOTLAND_PATH)) {
     
     fixed_effects_scotland <- c(FIXED_DEMO_VARS_SCOTLAND, active_context_vars)
     
-    # 2. Filter out missing values in model variables prior to glmer evaluation
     party_data <- party_data |> 
       drop_na(all_of(c(fixed_effects_scotland, "vote", "new_pcon")))
     

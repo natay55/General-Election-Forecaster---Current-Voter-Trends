@@ -14,10 +14,11 @@ party_share_map_wales <- list(
 )
 
 FIXED_DEMO_VARS_WALES <- c(
-  "gender",                # sex
-  "ageGroup",              # age group of individual voter
-  "p_education_level",     # qualifications — graduate/non-graduate divide
-  "housing_tenure_"        # housing tenure of individual
+  "gender",                             # sex
+  "ageGroup",                           # age group of individual voter
+  "p_education_level",                  # qualifications — graduate/non-graduate divide
+  "housing_tenure_",                    # housing tenure of individual
+  "past_vote_2024"                      # 2024 general election vote baseline
 )
 
 FIXED_CONTEXT_VARS_WALES <- c(
@@ -25,14 +26,10 @@ FIXED_CONTEXT_VARS_WALES <- c(
   "private_rented_pct",                 # Proportion of those who are privately renting
   "con_pct",                            # constituency degree holders percentage
   "welsh_speaking",                     # percentage of Welsh speakers in each constituency
-  "is_incumbent",                       # Incumbency indicator (Wales has had no by-elections or defections)
+  "pct_disabled",                       # Percentage of those disabled under the Equality Act
+  "claimant_pct",                       # Percentage of claimants in a constituency
   "index_dep_wales"                     # Index of Multiple Deprivation
 )
-
-RANDOM_DEMO_VARS_WALES <- c(
-  "(1 | past_vote_2024)"    
-)
-
 
 parties_of_interest_wales <- c(
   "Labour",
@@ -55,25 +52,15 @@ if (file.exists(here("data","Models","Wales","party_models_wales.rds"))) {
   for (party in parties_of_interest_wales) {
     party_data <- voting_likely_wales |>
       mutate(
-        vote           = if_else(vote_label == party, 1L, 0L),
-        is_incumbent   = if_else(!is.na(current_winner) & current_winner == party, 1L, 0L)
+        vote           = if_else(vote_label == party, 1L, 0L)
       )
     
-    active_context_vars <- FIXED_CONTEXT_VARS_WALES
-    if (sum(party_data$is_incumbent, na.rm = TRUE) == 0) {
-      active_context_vars <- setdiff(active_context_vars, "is_incumbent")
-    }
-    
-    fixed_effects_wales <- c(FIXED_DEMO_VARS_WALES, active_context_vars)
-    
-    party_data <- party_data |> 
-      drop_na(all_of(c(fixed_effects_wales, "vote", "new_pcon")))
+    fixed_effects_wales <- c(FIXED_DEMO_VARS_WALES, FIXED_CONTEXT_VARS_WALES)
     
     formula_str_wales <- paste(
       "vote ~",
-      paste(fixed_effects_wales, collapse = " + "), "+",
-      paste(RANDOM_DEMO_VARS_WALES, collapse = " + "),
-      "+ (1 | new_pcon)" # Constituency random intercept baseline
+      paste(fixed_effects_wales, collapse = " + "),
+      "+ (1 | new_pcon)" 
     )
     
     party_models_wales[[party]] <- glmer(

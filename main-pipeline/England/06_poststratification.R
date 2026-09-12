@@ -7,9 +7,9 @@ prediction_grid_base <- voting_likely_england |>
   distinct(
     new_pcon, ageGroup, p_ethnicity2,
     gender, p_education_level, ethnicity_harmonised,
-    housing_tenure_, past_vote_2024, p_eurefvote,
-    density, mortgage_owner_loan_pct, private_rented_pct, muslim_pct, 
-    con_pct, index, spatial_lag_con, spatial_lag_lab, spatial_lag_green, spatial_lag_ld, spatial_lag_reform,
+    housing_tenure_, past_vote_2024, remain,
+    density, private_rented_pct, mortgage_owner_loan_pct, past_vote_2024, muslim_pct, pct_disabled, claimant_pct,
+    con_pct, index, spatial_lag_con, spatial_lag_lab, spatial_lag_reform,
     Lab24, Con24, LD24, RUK24, Green24, Other24,
     by_election_share, current_winner
   )
@@ -18,7 +18,18 @@ prediction_grid_base <- voting_likely_england |>
 prediction_grid <- imap_dfr(party_models, function(model, party) {
   grid <- prediction_grid_base |>
     mutate(
-      is_incumbent   = if_else(current_winner == party, 1L, 0L)
+      is_incumbent   = if_else(current_winner == party, 1L, 0L),
+      vote_share     = if_else(
+        !is.na(by_election_share) & current_winner == party,
+        by_election_share,
+        .data[[party_share_map[[party]]]]
+      ),
+      is_high_profile = if_else(
+        new_pcon %in% names(high_profile) & unname(high_profile[new_pcon]) == party,
+        1L,
+        0L,
+        missing = 0L
+      )
     )
   
   grid |>

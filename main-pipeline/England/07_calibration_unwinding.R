@@ -20,29 +20,64 @@ mrp_national <- constituency_vote_shares |>
   group_by(party) |>
   summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
 
-# Calibration ratios — anchors demographically driven parties to aggregator
-# Liberal Democrat and Other set to ratio = 1 (no calibration) because:
-# - LD support reflects place effects beyond demographics — spatial lag
-#   captures this geographic signal which calibration would undo
-# - Other support reflects candidate specific local effects not captured
-#   by national polling — previous vote share is more informative
+target_proportion <- setNames(as.list(aggregator_shares$aggregator_mean), aggregator_shares$party)
 
-# Calculate the flat additive difference needed to conform to the aggregator
-# Calculate the flat additive difference for ALL parties
-calibration <- mrp_national |>
-  left_join(aggregator_shares, by = "party") |>
-  mutate(
-    ratio = aggregator_mean / mrp_mean
-  )
+logit <- function(p){
+  return (log(p / (1-p)))
+}
 
+logit_shift <- function(party = party) {
+  target <- target_proportion[[party]]
+  
+  # Calculate absolute difference between MRP mean and aggregator mean
+  mrp_val <- mrp_national |> filter(party == !!party) |> pull(mrp_mean)
+  diff <- abs(mrp_val - target)
+  
+  # Return raw unadjusted shares if the difference is under 0.05
+  if (is.na(diff) || diff < 0.05) {
+    return(constituency_vote_shares |> filter(party == !!party))
+  }
+  
+  raw_votes_target <- constituency_vote_shares |> 
+    filter(party == !!party) |> 
+    pull(vote_share)
+  
+  f_general <- function(vote_share, delta) {
+    return (
+      exp(logit(vote_share) + delta) / ((exp(logit(vote_share) + delta)) + (1 - vote_share))
+    )
+  }
+  
+  f <- function(delta) {
+    return (mean(f_general(raw_votes_target, delta)) - target)
+  }
+  
+  solution <- uniroot(f, interval = c(-10, 10))$root
+  
+  adjusted_vote_shares <- constituency_vote_shares |>
+    filter(party == !!party) |>
+    mutate(
+      vote_share = f_general(vote_share, solution)
+    )
+  
+  return(adjusted_vote_shares)
+}
+# Create an empty data frame to collect results from the loop
+constituency_vote_shares_calibrated <- data.frame()
 
-constituency_vote_shares_calibrated <- constituency_vote_shares |>
-  left_join(calibration |> select(party, ratio), by = "party") |>
-  mutate(vote_share = vote_share * ratio) |>
+for(parties in parties_of_interest) {
+  calibrated_party <- logit_shift(party = parties)
+  constituency_vote_shares_calibrated <- bind_rows(constituency_vote_shares_calibrated, calibrated_party)
+}
+
+# Add any remaining uncalibrated parties back in and normalise across constituencies
+uncalibrated_parties <- constituency_vote_shares |> 
+  filter(!party %in% parties_of_interest)
+
+constituency_vote_shares_calibrated <- bind_rows(constituency_vote_shares_calibrated, uncalibrated_parties) |> 
   group_by(new_pcon) |>
   mutate(vote_share = vote_share / sum(vote_share)) |>
   ungroup()
-
 
 #-------------------------------------------------------------------------------------------
 # Unwinding
@@ -76,6 +111,7 @@ party_sd_map <- list(
 )
 
 constituency_unwound <- constituency_vote_shares_calibrated |>
+  left_join(diff_table |> select(party, diff), by = "party") |>
   group_by(party) |>
   mutate(
     national_mean = mean(vote_share),
@@ -83,16 +119,10 @@ constituency_unwound <- constituency_vote_shares_calibrated |>
     current_sd    = sd(vote_share),
     scaling_ratio = historical_sd / current_sd,
     vote_share    = case_when(
-      # Symmetric unwinding — parties expected to revert to historical norms relative to the 2024 GE
-      # Labour and Lib Dem reverting to 2024 performance, whereas others doing worse / better
-      party %in% c("Labour", "Conservative") ~
+      diff < 0.05 & scaling_ratio >= 1 ~
         national_mean + (vote_share - national_mean) * scaling_ratio,
-      # Asymmetric unwinding — parties in structural geographic realignment
-      # LD, Green and Other have genuine new geographic coalitions
-      # only stretch toward historical norm, never compress
-      scaling_ratio >= 1 ~
-        national_mean + (vote_share - national_mean) * scaling_ratio,
-      TRUE ~ vote_share
+      TRUE ~
+        vote_share
     ),
     vote_share = pmax(vote_share, 0)
   ) |>

@@ -102,6 +102,42 @@ make_voting_likely <- function(voting_country) {
         p_education %in% c(13:18)               ~ "Degree",
         TRUE                                    ~ NA_character_
       ),
+      p_unemployment_risk = case_when(
+        riskUnemployment %in% c(1,2) ~ "Unlikely",
+        welfarePreference == 3        ~ "Neutral",
+        welfarePreference %in% c(4,5) ~ "Likely",
+        TRUE                          ~ "Unsure"
+      ),
+      p_immig_attitudes = case_when(
+        changeImmig %in% c(1,2) ~ "Reducing",
+        changeImmig == 3        ~ "Same_Level",
+        changeImmig %in% c(4,5) ~ "Higher",
+        TRUE                    ~ "Unsure"
+      ),
+      p_economic_prosperity = case_when(
+        econPersonalProsp %in% c(1,2)    ~ "Worse",
+        econPersonalProsp == 3           ~ "Same",
+        econPersonalProsp %in% c(4,5)    ~ "Better",
+        TRUE                             ~ "Unsure"
+      ),
+      p_health_attitudes = case_when(
+        changeNHS %in% c(1,2) ~ "Worse",
+        changeNHS == 3        ~ "Same",
+        changeNHS %in% c(4,5) ~ "Better",
+        TRUE                  ~ "Unsure"
+      ),
+      p_education_attitudes = case_when(
+        changeSchools %in% c(1,2) ~ "Worse",
+        changeSchools == 3        ~ "Same",
+        changeSchools %in% c(4,5) ~ "Better",
+        TRUE                      ~ "Unsure"
+      ),
+      p_israel_palestine = case_when(
+        israelPalestine %in% c(1,2) ~ "Israel",
+        israelPalestine == 3        ~ "Neither",
+        israelPalestine %in% c(4,5) ~ "Palestine",
+        TRUE                        ~ "Unsure"
+      ),
       # Convert haven labelled variables to base R types for glmer compatibility
       gender      = as.integer(gender),
       p_eurefvote = as.integer(replace_na(p_eurefvote, 0L))
@@ -113,8 +149,6 @@ make_voting_likely <- function(voting_country) {
       !is.na(housing_tenure_)
     )
 }
-
-bes$p_housing
 
 # Create likely voter samples for each nation
 voting_likely_england  <- make_voting_likely(voting_england)

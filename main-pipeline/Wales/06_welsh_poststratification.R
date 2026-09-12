@@ -6,7 +6,7 @@
 # Included `current_winner` to calculate incumbency per constituency/party pair
 prediction_grid_welsh <- voting_likely_wales |>
   distinct(
-    new_pcon, ageGroup, gender, p_education_level, 
+    new_pcon, ageGroup, gender, p_education_level, pct_disabled, claimant_pct,
     housing_tenure_, past_vote_2024, mortgage_owner_loan_pct, private_rented_pct,
     con_pct, index_dep_wales, welsh_speaking, current_winner,
     Lab24, Con24, LD24, RUK24, Green24, PC24, Other24

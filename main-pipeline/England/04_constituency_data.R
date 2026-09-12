@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Load constituency level data sources for England and Wales
 
 # House of Commons Library census data for English constituencies
@@ -10,6 +10,7 @@ census_data_2024 <- read_excel(
 ) |>
   mutate(Constituency = tolower(Constituency))
 
+#-------------------------------------------------------------------------------
 # ONS population density estimates by constituency 2021-2024
 pop_density <- read_xlsx(
   here("data", "Excel-Files","foi20263363westminsterparliamentaryconstituenciesmid2021tomid2024.xlsx"),
@@ -23,6 +24,7 @@ pop_density <- read_xlsx(
 ) |>
   mutate(new_pcon = tolower(new_pcon))
 
+#-------------------------------------------------------------------------------
 # Index of Multiple Deprivation by constituency
 deprivation_index <- read_xlsx(
   here("data", "Excel-Files","CBP10526.xlsx"),
@@ -30,6 +32,7 @@ deprivation_index <- read_xlsx(
 ) |>
   mutate(ConstituencyName = tolower(ConstituencyName))
 
+#-------------------------------------------------------------------------------
 # Qualification levels by constituency
 con_quals <- read_xlsx(
   here("data", "Excel-Files","Qualifications_census.xlsx"),
@@ -40,6 +43,7 @@ con_quals <- read_xlsx(
 ) |>
   mutate(new_pcon = tolower(new_pcon))
 
+#-------------------------------------------------------------------------------
 # 2024 Westminster constituency boundary shapefiles
 # Used to compute spatial lag predictors following Moran's I analysis
 constituencies_sf <- st_read(
@@ -48,12 +52,82 @@ constituencies_sf <- st_read(
        "PCON_JULY_2024_UK_BUC.shp")
 )
 
+#-------------------------------------------------------------------------------
 #Welsh deprivation index file
 welsh_dep <- read_xlsx(
   path = here("data", "Excel-Files","welsh_dep.xlsx")
 )
 
-#-------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# Dataset for capturing claimant by constituency, capturing economic health and welfare payment attitudes
+claimant_by_con <- read_xlsx(
+  path = here("data", "Excel-Files", "claimant_by_const.xlsx"),
+  sheet = 4,
+  skip = 4
+)
+
+#-------------------------------------------------------------------------------
+# Dataset for disabled by constituency, capturing levels of long term illness and NHS attitudes
+disabled_by_con <- read_xlsx(
+  path = here("data", "Excel-Files", "disabled_by_const.xlsx"),
+  sheet = 2
+)
+
+#-------------------------------------------------------------------------------
+# Clean disabled by constituency data and join to voting_likely for England and Wales
+disabled_by_con <- disabled_by_con |>
+  mutate(
+    new_pcon = as.character(`ConstituencyName`),
+    new_pcon = tolower(new_pcon),
+    new_pcon = str_replace_all(new_pcon, "&", "and"),
+    new_pcon = str_replace_all(new_pcon, "ynys môn", "ynys mon")
+  ) |>
+  filter(`groups` == "Disabled under the Equality Act") |>
+  group_by(new_pcon) |>
+  summarise(pct_disabled = sum(`Con_pc`), .groups = "drop") |>
+  select(new_pcon, pct_disabled)
+
+voting_likely_england <- voting_likely_england |>
+  left_join(
+    disabled_by_con |>
+      filter(new_pcon %in% voting_likely_england$new_pcon) |>
+      select(new_pcon, pct_disabled),
+    by = "new_pcon"
+  )
+
+voting_likely_wales <- voting_likely_wales |>
+  left_join(
+    disabled_by_con |>
+      filter(new_pcon %in% voting_likely_wales$new_pcon)|>
+      select(new_pcon, pct_disabled),
+    by = "new_pcon"
+  )
+
+#-------------------------------------------------------------------------------
+# Clean claimant by constituency and join to voting_likely for England and Wales
+claimant_by_con <- claimant_by_con |>
+  mutate(new_pcon = tolower(`Geography`), claimant_pct = `Proportion of people2`)|>
+  mutate(new_pcon = str_replace(new_pcon, "ynys môn", "ynys mon"))|>
+  mutate(across(where(is.numeric), (~./100)))|>
+  select(new_pcon, claimant_pct)
+
+voting_likely_england <- voting_likely_england |>
+  left_join(
+    claimant_by_con |>
+      filter(new_pcon %in% voting_likely_england$new_pcon)|>
+      select(new_pcon, claimant_pct),
+    by = "new_pcon"
+  )
+
+voting_likely_wales <- voting_likely_wales |>
+  left_join(
+    claimant_by_con |>
+      filter(new_pcon %in% voting_likely_wales$new_pcon)|>
+      select(new_pcon, claimant_pct),
+    by = "new_pcon"
+  )
+
+#-------------------------------------------------------------------------------
 # Join constituency level predictors to voting_likely for England and Wales
 
 # Population density
@@ -255,7 +329,8 @@ parties_spatial <- list(
   con    = "Con24",
   ld     = "LD24",
   reform = "RUK24",
-  green  = "Green24"
+  green  = "Green24",
+  other  = "Other24"
 )
 
 bes_england_ordered <- bes_elections |>

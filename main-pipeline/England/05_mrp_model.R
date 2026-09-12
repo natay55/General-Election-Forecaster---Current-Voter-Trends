@@ -19,19 +19,18 @@ party_share_map <- list(
 spatial_lag_map <- list(
   "Labour"                 = "spatial_lag_lab",
   "Conservative"           = "spatial_lag_con",
-  "Green Party"            = "spatial_lag_green",
-  "Brexit Party/Reform UK" = "spatial_lag_reform",
-  "Liberal Democrat"       = "spatial_lag_ld"
+  "Brexit Party/Reform UK" = "spatial_lag_reform"
 )
 
 # FIXED INDIVIDUAL BASELINES: Dominant, evenly-distributed demographic baselines.
 # Large enough across the BES sample to stay safely fixed without causing unobserved cells.
 FIXED_DEMO_VARS <- c(
-  "gender",              # sex
-  "ageGroup",            # Age group of individual
-  "p_education_level",   # qualifications — graduate/non-graduate divide
-  "housing_tenure_",     # Type of hosuing tenure of an individual
-  "ethnicity_harmonised" #Ethnicity of individual
+  "gender",                   # sex
+  "ageGroup",                 # Age group of individual
+  "p_education_level",        # qualifications — graduate/non-graduate divide
+  "housing_tenure_",          # Type of hosuing tenure of an individual
+  "ethnicity_harmonised",     # Ethnicity of individual
+  "past_vote_2024"            # Past vote in 2024 GE
 )
 
 # FIXED CONSTITUENCY CONTEXT: Continuous macro-level census variables 
@@ -40,17 +39,64 @@ FIXED_CONTEXT_VARS <- c(
   "mortgage_owner_loan_pct",  # Proportion of those home owners with a mortgage or a loan
   "private_rented_pct",       # Proportion of those who are privately renting
   "con_pct",                  # constituency degree holders percentage
-  "muslim_pct",               # constituency Muslim population — community political effects
   "is_incumbent",             # Binary indicator for incumbency
+  "vote_share",               # Vote share in 2024 general election
+  "remain",                   # Hanretty estimates of remain voters for Brexit, capturing immigration attitudes
+  "muslim_pct",               # Percentage of Muslims in a constituency
+  "claimant_pct",             # Percentage of disabled under the Equality Act by constituency
+  "pct_disabled",             # Percentage of claimants in each constituency
+  "is_high_profile",
   "index"                     # Index of Multiple Deprivation
 )
 
-# RANDOM DEMOGRAPHIC INTERCEPTS: Individual demographics and political backgrounds 
-# prone to geographic clustering or small/empty cell counts inside individual constituencies.
-# Converting these to random effects invokes shrinkage to protect sparse cells from overfitting.
-RANDOM_DEMO_VARS <- c(
-  "(1 | past_vote_2024)",     #Random effect of past vote
-  "(1 | p_eurefvote)"         #Random effect of Brexit vote
+INTERACTION_MAP <- list(
+  "Labour" = c(
+    "ageGroup:density",
+    "p_education_level:density",
+    "housing_tenure_:private_rented_pct",
+    "past_vote_2024:remain",
+    "p_education_level:index",
+    "ageGroup:claimant_pct"
+  ),
+  
+  "Brexit Party/Reform UK" = c(
+    "p_education_level:remain",
+    "past_vote_2024:remain",
+    "ageGroup:claimant_pct",
+    "housing_tenure_:claimant_pct",
+    "p_education_level:index",
+    "ageGroup:index"
+  ),
+  
+  "Conservative" = c(
+    "past_vote_2024:is_incumbent",
+    "ageGroup:con_pct",
+    "housing_tenure_:mortgage_owner_loan_pct"
+  ),
+  
+  "Liberal Democrat" = c(
+    "p_education_level:remain",
+    "p_education_level:density",
+    "ageGroup:con_pct"
+  ),
+  
+  "Green Party" = c(
+    "p_education_level:density",
+    "ageGroup:density"
+  ),
+  
+  "Other" = c(
+    "past_vote_2024:muslim_pct",
+    "past_vote_2024:claimant_pct"
+  )
+)
+
+high_profile <- list(
+  "chorley"           = "Other",
+  "makerfield"        = "Labour",
+  "gorton and denton" = "Green Party",
+  "islington north"   = "Other",
+  "great yarmouth"    = "Other"
 )
 
 parties_of_interest <- c(
@@ -71,29 +117,55 @@ if (file.exists(here("data", "Models","England","party_models.rds"))) {
   party_models <- list()
   
   for (party in parties_of_interest) {
+    
     party_data <- voting_likely_england |>
       mutate(
-        vote           = if_else(vote_label == party, 1L, 0L),
-        is_incumbent   = if_else(current_winner == party, 1L, 0L)
+        vote            = if_else(vote_label == party, 1L, 0L),
+        is_incumbent    = if_else(current_winner == party, 1L, 0L),
+        vote_share      = if_else(
+          !is.na(by_election_share) & current_winner == party,
+          by_election_share,
+          .data[[party_share_map[[party]]]]
+        ),
+        is_high_profile = if_else(
+          new_pcon %in% names(high_profile) & unname(high_profile[new_pcon]) == party,
+          1L,
+          0L,
+          missing = 0L
+        )
       )
     
-    # Add spatial lag for geographically driven parties
-    spatial_var <- spatial_lag_map[[party]]
-    fixed_effects <- if (!is.null(spatial_var)) c(FIXED_DEMO_VARS, FIXED_CONTEXT_VARS, spatial_var) else c(FIXED_DEMO_VARS, FIXED_CONTEXT_VARS)
+    # Check if this specific party actually has any high-profile seats (sum > 0)
+    has_hp_seats <- sum(party_data$is_high_profile, na.rm = TRUE) > 0
     
-    # Construct formula separating true fixed coefficients from partial-pooling random blocks
+    # Remove is_high_profile from the context vars if the party has none
+    party_context_vars <- FIXED_CONTEXT_VARS
+    if (!has_hp_seats) {
+      party_context_vars <- setdiff(party_context_vars, "is_high_profile")
+    }
+    
+    spatial_var      <- spatial_lag_map[[party]]
+    interaction_vars <- INTERACTION_MAP[[party]]
+    
+    fixed_effects <- c(
+      FIXED_DEMO_VARS,
+      party_context_vars,
+      interaction_vars,
+      spatial_var
+    )
+    fixed_effects <- fixed_effects[!is.na(fixed_effects)]
+    
     formula_str <- paste(
       "vote ~",
-      paste(fixed_effects, collapse = " + "), "+",
-      paste(RANDOM_DEMO_VARS, collapse = " + "),
-      "+ (1 | new_pcon)" # Constituency random intercept baseline
+      paste(fixed_effects, collapse = " + "),
+      "+ (1 | new_pcon)"
     )
     
     party_models[[party]] <- glmer(
       as.formula(formula_str),
-      data    = party_data,
-      control = glmerControl(autoscale=TRUE),
-      family  = binomial(link = "logit")
+      data = party_data,
+      control = glmerControl(autoscale = TRUE),
+      family = binomial(link = "logit")
     )
     
     cat("Fitted model for:", party, "\n")
