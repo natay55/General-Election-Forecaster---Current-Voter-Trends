@@ -117,7 +117,7 @@ app.layout = html.Div(
         # Header
         html.Div(
             style={
-                "display"         : "flex",
+                "display"         : "flex", 
                 "flexDirection"   : "column",
                 "justifyContent"  : "center",
                 "alignItems"      : "center",

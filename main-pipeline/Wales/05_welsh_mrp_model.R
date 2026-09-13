@@ -27,8 +27,40 @@ FIXED_CONTEXT_VARS_WALES <- c(
   "con_pct",                            # constituency degree holders percentage
   "welsh_speaking",                     # percentage of Welsh speakers in each constituency
   "pct_disabled",                       # Percentage of those disabled under the Equality Act
+  "remain",                             # Hanretty estimates for remain vote share for each constituency
   "claimant_pct",                       # Percentage of claimants in a constituency
+  "is_high_profile",                    # High profile politicians that could theoretically win on name alone
+  "vote_share",                         # 2024 General Election vote share
   "index_dep_wales"                     # Index of Multiple Deprivation
+)
+
+INTERACTION_MAP_WALES <- list(
+  
+  "Labour" = c(
+    "housing_tenure_:private_rented_pct",
+    "p_education_level:index_dep_wales"
+  ),
+  "Plaid Cymru" = c(
+    "p_education_level:welsh_speaking"
+  ),
+  "Brexit Party/Reform UK" = c(
+    "p_education_level:remain",
+    "ageGroup:index_dep_wales"
+  ),
+  "Conservative" = c(
+    "ageGroup:mortgage_owner_loan_pct"
+  ),
+  "Liberal Democrat" = c(
+    "p_education_level:remain",
+    "ageGroup:con_pct"
+  )
+)
+
+high_profile <- list(
+  "rhondda and ogmore" = "Labour",       #Chris Bryant
+  "ceredigion preseli" = "Plaid Cymru",  # Ben Lake
+  "aberafan maesteg"   = "Labour",       # Stephen Kinnock
+  "dwyfor meirionnydd" = "Plaid Cymru"   # Liz Saville Roberts
 )
 
 parties_of_interest_wales <- c(
@@ -52,10 +84,33 @@ if (file.exists(here("data","Models","Wales","party_models_wales.rds"))) {
   for (party in parties_of_interest_wales) {
     party_data <- voting_likely_wales |>
       mutate(
-        vote           = if_else(vote_label == party, 1L, 0L)
+        vote           = if_else(vote_label == party, 1L, 0L),
+        is_high_profile = if_else(
+          new_pcon %in% names(high_profile) & unname(high_profile[new_pcon]) == party,
+          1L,
+          0L,
+          missing = 0L
+        ),
+        vote_share = .data[[party_share_map_wales[[party]]]]
       )
     
-    fixed_effects_wales <- c(FIXED_DEMO_VARS_WALES, FIXED_CONTEXT_VARS_WALES)
+    has_hp_seats <- sum(party_data$is_high_profile, na.rm = TRUE) > 0
+    
+    party_context_vars_wales <- FIXED_CONTEXT_VARS_WALES
+    
+    # Clean scalar conditional filtering
+    if (!has_hp_seats) {
+      party_context_vars_wales <- setdiff(party_context_vars_wales, "is_high_profile")
+    }
+    
+    interaction_vars_wales <- INTERACTION_MAP_WALES[[party]]
+    
+    fixed_effects_wales <- c(
+      FIXED_DEMO_VARS_WALES,
+      party_context_vars_wales,
+      interaction_vars_wales
+    )
+    fixed_effects_wales <- fixed_effects_wales[!is.na(fixed_effects_wales)]
     
     formula_str_wales <- paste(
       "vote ~",

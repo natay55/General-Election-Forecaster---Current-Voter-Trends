@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------------------
-# Asymmetric calibration
+# Asymmetric calibration (Wales)
 # Anchors constituency predictions to Bayesian national vote share estimates
 # Following Hanretty, Lauderdale and Vivyan (2016) reconciliation approach
 
@@ -14,51 +14,102 @@ aggregator_shares_wales <- summary_table_wales |>
     Party == "PC%"     ~ "Plaid Cymru",
     Party == "other"   ~ "Other"
   )) |>
-  select(party, aggregator_mean = mean)
+  select(party, aggregator_mean = mean, low_share = lower_95, upper_share = upper_95)
 
 # MRP implied national vote shares
 mrp_national_wales <- constituency_vote_shares_wales |>
   group_by(party) |>
   summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
 
-calibration_wales <- mrp_national_wales |>
-  left_join(aggregator_shares_wales, by = "party") |>
-  mutate(
-    ratio = aggregator_mean / mrp_mean,
-    ratio = if_else(abs(aggregator_mean - mrp_mean) < 0.03, ratio, 1)
-  )
+# Difference between MRP mean and aggregator mean
+diff_table_wales <- mrp_national_wales |>
+  left_join(aggregator_shares_wales |> select(party, aggregator_mean), by = "party") |>
+  mutate(diff = abs(mrp_mean - aggregator_mean))
 
-constituency_vote_shares_calibrated_wales <- constituency_vote_shares_wales |>
-  left_join(calibration_wales |> select(party, ratio), by = "party") |>
-  mutate(vote_share = vote_share * ratio) |>
+target_proportion_wales <- setNames(as.list(aggregator_shares_wales$aggregator_mean), aggregator_shares_wales$party)
+
+logit <- function(p) {
+  return(log(p / (1 - p)))
+}
+
+logit_shift_wales <- function(party) {
+  target <- target_proportion_wales[[party]]
+  
+  # Calculate absolute difference between MRP mean and aggregator mean
+  mrp_val <- mrp_national_wales |> filter(party == !!party) |> pull(mrp_mean) # FIX: was mrp_national
+  diff <- abs(mrp_val - target)
+  
+  # Return raw unadjusted shares if the difference is under 0.05
+  if (is.na(diff) || diff < 0.05) {
+    return(constituency_vote_shares_wales |> filter(party == !!party))
+  }
+  
+  raw_votes_target <- constituency_vote_shares_wales |> 
+    filter(party == !!party) |> 
+    pull(vote_share)
+  
+  f_general <- function(vote_share, delta) {
+    return(
+      exp(logit(vote_share) + delta) / ((exp(logit(vote_share) + delta)) + (1 - vote_share))
+    )
+  }
+  
+  f <- function(delta) {
+    return(mean(f_general(raw_votes_target, delta)) - target)
+  }
+  
+  solution <- uniroot(f, interval = c(-10, 10))$root
+  
+  adjusted_vote_shares_wales <- constituency_vote_shares_wales |>
+    filter(party == !!party) |>
+    mutate(
+      vote_share = f_general(vote_share, solution)
+    )
+  
+  return(adjusted_vote_shares_wales)
+}
+
+# Create an empty data frame to collect results from the loop
+constituency_vote_shares_calibrated_wales <- data.frame()
+
+for (parties in parties_of_interest_wales) { # FIX: was parties_of_interest
+  calibrated_party_wales <- logit_shift_wales(party = parties)
+  constituency_vote_shares_calibrated_wales <- bind_rows(
+    constituency_vote_shares_calibrated_wales, 
+    calibrated_party_wales
+  )
+}
+
+# Add any remaining uncalibrated parties back in and normalise across constituencies
+uncalibrated_parties_wales <- constituency_vote_shares_wales |> 
+  filter(!party %in% parties_of_interest_wales)
+
+constituency_vote_shares_calibrated_wales <- bind_rows(
+  constituency_vote_shares_calibrated_wales, 
+  uncalibrated_parties_wales
+) |> 
   group_by(new_pcon) |>
   mutate(vote_share = vote_share / sum(vote_share)) |>
   ungroup()
+
 #-------------------------------------------------------------------------------------------
-# Unwinding
+# Asymmetric Unwinding (Wales)
 # Following YouGov's methodology — corrects MRP tendency to compress
 # geographic distributions through partial pooling
-#
-# Unwinding is applied symmetrically:
-# - When historical_sd > mrp_sd: stretch to match historical norms
-# - When historical_sd < mrp_sd: keep MRP predictions — spatial predictors
-#   may be capturing genuine current dynamics beyond historical baselines
 
-# Historical standard deviations from 2024 GE results
 historical_dist_wales <- bes_elections |>
   filter(Country == "Wales") |>
   summarise(
-    # 2024 only — parties undergoing structural geographic realignment
-    sd_lab    =  sd(Lab24,   na.rm = TRUE) / 100,
-    sd_reform =  sd(RUK24,   na.rm = TRUE) / 100,
-    sd_con    =  sd(Con24,   na.rm = TRUE) / 100,
-    sd_ld     =  sd(LD24,    na.rm = TRUE) / 100,
-    sd_green  =  sd(Green24, na.rm = TRUE) / 100,
-    sd_pc     =  sd(PC24,    na.rm = TRUE) / 100,
-    sd_other  =  sd(Other24, na.rm = TRUE) / 100
+    sd_lab    = sd(Lab24,   na.rm = TRUE) / 100,
+    sd_reform = sd(RUK24,   na.rm = TRUE) / 100,
+    sd_con    = sd(Con24,   na.rm = TRUE) / 100,
+    sd_ld     = sd(LD24,    na.rm = TRUE) / 100,
+    sd_green  = sd(Green24, na.rm = TRUE) / 100,
+    sd_pc     = sd(PC24,    na.rm = TRUE) / 100,
+    sd_other  = sd(Other24, na.rm = TRUE) / 100
   )
 
-party_sd_map_wales <- list(
+party_sd_map_wales <- list( # FIX: was party_sd_map
   "Labour"                 = historical_dist_wales$sd_lab,
   "Conservative"           = historical_dist_wales$sd_con,
   "Liberal Democrat"       = historical_dist_wales$sd_ld,
@@ -69,13 +120,19 @@ party_sd_map_wales <- list(
 )
 
 constituency_unwound_wales <- constituency_vote_shares_calibrated_wales |>
+  left_join(diff_table_wales |> select(party, diff), by = "party") |> # FIX: was diff_table
   group_by(party) |>
   mutate(
     national_mean = mean(vote_share),
     historical_sd = party_sd_map_wales[[cur_group()$party]],
     current_sd    = sd(vote_share),
     scaling_ratio = historical_sd / current_sd,
-    vote_share    = national_mean + (vote_share - national_mean) * scaling_ratio,
+    vote_share    = case_when(
+      diff < 0.05 & scaling_ratio >= 1 ~ 
+        national_mean + (vote_share - national_mean) * scaling_ratio,
+      TRUE ~
+        vote_share
+    ),
     vote_share    = pmax(vote_share, 0)
   ) |>
   ungroup() |>

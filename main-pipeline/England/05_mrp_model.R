@@ -45,7 +45,7 @@ FIXED_CONTEXT_VARS <- c(
   "muslim_pct",               # Percentage of Muslims in a constituency
   "claimant_pct",             # Percentage of disabled under the Equality Act by constituency
   "pct_disabled",             # Percentage of claimants in each constituency
-  "is_high_profile",
+  "is_high_profile",          # Indicator for high profile candidates
   "index"                     # Index of Multiple Deprivation
 )
 
@@ -71,7 +71,12 @@ INTERACTION_MAP <- list(
   "Conservative" = c(
     "past_vote_2024:is_incumbent",
     "ageGroup:con_pct",
-    "housing_tenure_:mortgage_owner_loan_pct"
+    "housing_tenure_:mortgage_owner_loan_pct",
+    "p_education_level:density",
+    "ageGroup:density",
+    "past_vote_2024:remain",
+    "housing_tenure_:private_rented_pct",
+    "p_education_level:index"
   ),
   
   "Liberal Democrat" = c(
@@ -92,11 +97,18 @@ INTERACTION_MAP <- list(
 )
 
 high_profile <- list(
-  "chorley"           = "Other",
-  "makerfield"        = "Labour",
-  "gorton and denton" = "Green Party",
-  "islington north"   = "Other",
-  "great yarmouth"    = "Other"
+  "makerfield"            = "Labour", #Andy Burnham
+  "gorton and denton"     = "Green Party", # Hannah Spencer
+  "islington north"       = "Other", #Jeremy Corbyn
+  "great yarmouth"        = "Other", #Rupert Lowe
+  "north west essex"      = "Conservative", #Kemi Badenoch
+  "north herefordshire"   = "Green Party", #Ellie Chowns
+  "waveney valley"        = "Green Party", #Adrian Ramsay
+  "kingston and surbiton" = "Liberal Democrat", # Ed Davey
+  "clacton"               = "Brexit Party/Reform UK", #Nigel Farage
+  "coventry south"        = "Other", #Zarah Sultana,
+  "godalming and ash"     = "Conservative" #Jeremy Hunt
+  
 )
 
 parties_of_interest <- c(
@@ -135,11 +147,12 @@ if (file.exists(here("data", "Models","England","party_models.rds"))) {
         )
       )
     
-    # Check if this specific party actually has any high-profile seats (sum > 0)
+    # Check if this specific party actually has high-profile seats
     has_hp_seats <- sum(party_data$is_high_profile, na.rm = TRUE) > 0
     
-    # Remove is_high_profile from the context vars if the party has none
     party_context_vars <- FIXED_CONTEXT_VARS
+    
+    # Clean scalar conditional filtering
     if (!has_hp_seats) {
       party_context_vars <- setdiff(party_context_vars, "is_high_profile")
     }

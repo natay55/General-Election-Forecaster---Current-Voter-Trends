@@ -20,6 +20,11 @@ mrp_national <- constituency_vote_shares |>
   group_by(party) |>
   summarise(mrp_mean = mean(vote_share, na.rm = TRUE), .groups = "drop")
 
+# Difference between MRP mean and aggregator mean
+diff_table <- mrp_national |>
+  left_join(aggregator_shares |> select(party, aggregator_mean), by = "party") |>
+  mutate(diff = abs(mrp_mean - aggregator_mean))
+
 target_proportion <- setNames(as.list(aggregator_shares$aggregator_mean), aggregator_shares$party)
 
 logit <- function(p){
@@ -119,6 +124,7 @@ constituency_unwound <- constituency_vote_shares_calibrated |>
     current_sd    = sd(vote_share),
     scaling_ratio = historical_sd / current_sd,
     vote_share    = case_when(
+      # We set the condition for scaling ratio >= 1 since the current projections are similar to the performance of the last GE
       diff < 0.05 & scaling_ratio >= 1 ~
         national_mean + (vote_share - national_mean) * scaling_ratio,
       TRUE ~
@@ -128,5 +134,11 @@ constituency_unwound <- constituency_vote_shares_calibrated |>
   ) |>
   ungroup() |>
   group_by(new_pcon) |>
-  mutate(vote_share = vote_share / sum(vote_share)) |>
+  mutate(
+    # Overriding the vote shares for Chorley because the speaker typically runs uncontested, so he is guaranteed to win
+    vote_share = case_when(
+      new_pcon == "chorley" & party == "Other" ~ 1,
+      new_pcon == "chorley" & party != "Other" ~ 0,
+      TRUE ~ vote_share / sum(vote_share)
+  ))|>
   ungroup()

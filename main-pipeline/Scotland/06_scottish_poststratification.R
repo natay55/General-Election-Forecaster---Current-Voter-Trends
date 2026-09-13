@@ -11,7 +11,8 @@ prediction_grid_scottish <- voting_likely_scotland |>
     housing_tenure_, past_vote_2024, pct_disabled, claimant_pct,
     mortgage_owner_loan_pct, private_rented_pct, Con_pc, scot_rem, 
     dep_index, current_winner,
-    Lab24, Con24, LD24, SNP24, RUK24, Green24, Other24
+    Lab24, Con24, LD24, SNP24, RUK24, Green24, Other24,
+    by_election_share, current_winner
   )
 
 prediction_grid_scottish <- imap_dfr(party_models_scotland, function(model, party) {
@@ -19,7 +20,18 @@ prediction_grid_scottish <- imap_dfr(party_models_scotland, function(model, part
   # 1. Compute is_incumbent dynamically for the current party
   grid <- prediction_grid_scottish |>
     mutate(
-      is_incumbent = if_else(!is.na(current_winner) & current_winner == party, 1L, 0L)
+      is_incumbent    = if_else(!is.na(current_winner) & current_winner == party, 1L, 0L),
+      vote_share      = if_else(
+        !is.na(by_election_share) & current_winner == party,
+        by_election_share,
+        .data[[party_share_map_scottish[[party]]]]
+      ),
+      is_high_profile = if_else(
+        new_pcon %in% names(high_profile) & unname(high_profile[new_pcon]) == party,
+        1L,
+        0L,
+        missing = 0L
+      )
     )
   
   # 2. Add offset safely for Reform UK

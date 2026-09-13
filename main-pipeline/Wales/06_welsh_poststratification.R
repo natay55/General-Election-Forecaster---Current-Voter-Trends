@@ -8,7 +8,7 @@ prediction_grid_welsh <- voting_likely_wales |>
   distinct(
     new_pcon, ageGroup, gender, p_education_level, pct_disabled, claimant_pct,
     housing_tenure_, past_vote_2024, mortgage_owner_loan_pct, private_rented_pct,
-    con_pct, index_dep_wales, welsh_speaking, current_winner,
+    con_pct, index_dep_wales, welsh_speaking, current_winner, remain, 
     Lab24, Con24, LD24, RUK24, Green24, PC24, Other24
   )
 
@@ -17,16 +17,22 @@ prediction_grid_welsh <- voting_likely_wales |>
 predictions_welsh <- imap_dfr(party_models_wales, function(model, party) {
   
   # Calculate is_incumbent for the current party iteration
-  grid_with_incumbency <- prediction_grid_welsh |>
+  grid<- prediction_grid_welsh |>
     mutate(
-      is_incumbent = if_else(!is.na(current_winner) & current_winner == party, 1L, 0L)
+      is_high_profile = if_else(
+        new_pcon %in% names(high_profile) & unname(high_profile[new_pcon]) == party,
+        1L,
+        0L,
+        missing = 0L
+      ),
+      vote_share = .data[[party_share_map_wales[[party]]]]
     )
   
-  grid_with_incumbency |>
+  grid |>
     mutate(
       predicted = predict(
         model,
-        newdata          = grid_with_incumbency,
+        newdata          = grid,
         type             = "response",
         allow.new.levels = TRUE
       ),
