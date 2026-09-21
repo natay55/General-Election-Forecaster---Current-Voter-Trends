@@ -13,9 +13,6 @@ party_share_map <- list(
 )
 
 # Spatial lag predictors applied only to geographically driven parties
-# LD and Green support reflects place effects beyond demographics
-# applying spatial lags to all parties but only including in formula
-# for parties where geographic clustering drives support beyond demographics
 spatial_lag_map <- list(
   "Labour"                 = "spatial_lag_lab",
   "Conservative"           = "spatial_lag_con",
@@ -23,14 +20,13 @@ spatial_lag_map <- list(
 )
 
 # FIXED INDIVIDUAL BASELINES: Dominant, evenly-distributed demographic baselines.
-# Large enough across the BES sample to stay safely fixed without causing unobserved cells.
 FIXED_DEMO_VARS <- c(
-  "gender",                   # sex
-  "ageGroup",                 # Age group of individual
-  "p_education_level",        # qualifications — graduate/non-graduate divide
-  "housing_tenure_",          # Type of hosuing tenure of an individual
-  "ethnicity_harmonised",     # Ethnicity of individual
-  "past_vote_2024"            # Past vote in 2024 GE
+  "gender",               # sex
+  "ageGroup",             # Age group of individual
+  "p_education_level",    # qualifications — graduate/non-graduate divide
+  "housing_tenure_",      # Type of housing tenure of an individual
+  "ethnicity_harmonised", # Ethnicity of individual
+  "past_vote_2024"        # Past vote in 2024 GE
 )
 
 # FIXED CONSTITUENCY CONTEXT: Continuous macro-level census variables 
@@ -41,74 +37,26 @@ FIXED_CONTEXT_VARS <- c(
   "con_pct",                  # constituency degree holders percentage
   "is_incumbent",             # Binary indicator for incumbency
   "vote_share",               # Vote share in 2024 general election
-  "remain",                   # Hanretty estimates of remain voters for Brexit, capturing immigration attitudes
+  "remain",                   # Hanretty estimates of remain voters for Brexit
   "muslim_pct",               # Percentage of Muslims in a constituency
-  "claimant_pct",             # Percentage of disabled under the Equality Act by constituency
-  "pct_disabled",             # Percentage of claimants in each constituency
+  "claimant_pct",             # Percentage of claimants in each constituency
+  "pct_disabled",             # Percentage of disabled under Equality Act
   "is_high_profile",          # Indicator for high profile candidates
   "index"                     # Index of Multiple Deprivation
 )
 
-INTERACTION_MAP <- list(
-  "Labour" = c(
-    "ageGroup:density",
-    "p_education_level:density",
-    "housing_tenure_:private_rented_pct",
-    "past_vote_2024:remain",
-    "p_education_level:index",
-    "ageGroup:claimant_pct"
-  ),
-  
-  "Brexit Party/Reform UK" = c(
-    "p_education_level:remain",
-    "past_vote_2024:remain",
-    "ageGroup:claimant_pct",
-    "housing_tenure_:claimant_pct",
-    "p_education_level:index",
-    "ageGroup:index"
-  ),
-  
-  "Conservative" = c(
-    "past_vote_2024:is_incumbent",
-    "ageGroup:con_pct",
-    "housing_tenure_:mortgage_owner_loan_pct",
-    "p_education_level:density",
-    "ageGroup:density",
-    "past_vote_2024:remain",
-    "housing_tenure_:private_rented_pct",
-    "p_education_level:index"
-  ),
-  
-  "Liberal Democrat" = c(
-    "p_education_level:remain",
-    "p_education_level:density",
-    "ageGroup:con_pct"
-  ),
-  
-  "Green Party" = c(
-    "p_education_level:density",
-    "ageGroup:density"
-  ),
-  
-  "Other" = c(
-    "past_vote_2024:muslim_pct",
-    "past_vote_2024:claimant_pct"
-  )
-)
-
 high_profile <- list(
-  "makerfield"            = "Labour", #Andy Burnham
-  "gorton and denton"     = "Green Party", # Hannah Spencer
-  "islington north"       = "Other", #Jeremy Corbyn
-  "great yarmouth"        = "Other", #Rupert Lowe
-  "north west essex"      = "Conservative", #Kemi Badenoch
-  "north herefordshire"   = "Green Party", #Ellie Chowns
-  "waveney valley"        = "Green Party", #Adrian Ramsay
-  "kingston and surbiton" = "Liberal Democrat", # Ed Davey
-  "clacton"               = "Brexit Party/Reform UK", #Nigel Farage
-  "coventry south"        = "Other", #Zarah Sultana,
-  "godalming and ash"     = "Conservative" #Jeremy Hunt
-  
+  "makerfield"            = "Labour",                # Andy Burnham
+  "gorton and denton"     = "Green Party",           # Hannah Spencer
+  "islington north"       = "Other",                 # Jeremy Corbyn
+  "great yarmouth"        = "Other",                 # Rupert Lowe
+  "north west essex"      = "Conservative",          # Kemi Badenoch
+  "north herefordshire"   = "Green Party",           # Ellie Chowns
+  "waveney valley"        = "Green Party",           # Adrian Ramsay
+  "kingston and surbiton" = "Liberal Democrat",      # Ed Davey
+  "clacton"               = "Brexit Party/Reform UK",# Nigel Farage
+  "coventry south"        = "Other",                 # Zarah Sultana
+  "godalming and ash"     = "Conservative"           # Jeremy Hunt
 )
 
 parties_of_interest <- c(
@@ -123,8 +71,8 @@ parties_of_interest <- c(
 #-------------------------------------------------------------------------------------------
 # Fit or load models
 
-if (file.exists(here("data", "Models","England","party_models.rds"))) {
-  party_models <- readRDS(here("data", "Models","England","party_models.rds"))
+if (file.exists(here("data", "Models", "England", "party_models.rds"))) {
+  party_models <- readRDS(here("data", "Models", "England", "party_models.rds"))
 } else {
   party_models <- list()
   
@@ -152,21 +100,19 @@ if (file.exists(here("data", "Models","England","party_models.rds"))) {
     
     party_context_vars <- FIXED_CONTEXT_VARS
     
-    # Clean scalar conditional filtering
     if (!has_hp_seats) {
       party_context_vars <- setdiff(party_context_vars, "is_high_profile")
     }
     
     spatial_var      <- spatial_lag_map[[party]]
-    interaction_vars <- INTERACTION_MAP[[party]]
     
+    # Safely combine all fixed effects terms (handling NULLs for parties without interactions/spatial lags)
     fixed_effects <- c(
       FIXED_DEMO_VARS,
       party_context_vars,
-      interaction_vars,
       spatial_var
     )
-    fixed_effects <- fixed_effects[!is.na(fixed_effects)]
+    fixed_effects <- fixed_effects[!is.na(fixed_effects) & !is.null(fixed_effects)]
     
     formula_str <- paste(
       "vote ~",
@@ -184,5 +130,5 @@ if (file.exists(here("data", "Models","England","party_models.rds"))) {
     cat("Fitted model for:", party, "\n")
   }
   
-  saveRDS(party_models, here("data", "Models","England","party_models.rds"))
+  saveRDS(party_models, here("data", "Models", "England", "party_models.rds"))
 }

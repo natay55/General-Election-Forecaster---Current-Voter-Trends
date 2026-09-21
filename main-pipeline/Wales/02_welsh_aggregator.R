@@ -87,14 +87,14 @@ stan_data_wales <- list(
 #-------------------------------------------------------------------------------------------
 # Fit or load Stan model
 
-MODEL_FIT_PATH <- here("data","Models","Wales","model_fit_wales.rds")
+MODEL_FIT_PATH_WALES <- here("data","Models","Wales","model_fit_wales.rds")
 
-if (file.exists(here("data","Models","Wales","model_fit_wales.rds"))) {
-  model_fit <- readRDS(here("data","Models","Wales", "model_fit_wales.rds"))
-  stan_data <- readRDS(here("data","Models","Wales","stan_data_wales.rds")) 
-  party_cols <- readRDS(here("data","Models","Wales","party_cols_wales.rds"))
+if (file.exists(MODEL_FIT_PATH_WALES)) {
+  model_fit_wales <- readRDS(here(MODEL_FIT_PATH_WALES))
+  stan_data_wales <- readRDS(here("data","Models","Wales","stan_data_wales.rds")) 
+  party_cols_wales <- readRDS(here("data","Models","Wales","party_cols_wales.rds"))
 } else {
-  model_fit <- stan(
+  model_fit_wales <- stan(
     file    = here("main-pipeline","All","model.stan"),
     data    = stan_data_wales,
     chains  = 4,
@@ -103,24 +103,24 @@ if (file.exists(here("data","Models","Wales","model_fit_wales.rds"))) {
     cores   = 4,
     refresh = 100
   )
-  saveRDS(model_fit,  here("data","Models","Wales","model_fit_wales.rds"))
-  saveRDS(stan_data,  here("data","Models","Wales","stan_data_wales.rds"))
-  saveRDS(party_cols, here("data","Models","Wales","party_cols_wales.rds"))
+  saveRDS(model_fit_wales,  here(MODEL_FIT_PATH_WALES))
+  saveRDS(stan_data_wales,  here("data","Models","Wales","stan_data_wales.rds"))
+  saveRDS(party_cols_wales, here("data","Models","Wales","party_cols_wales.rds"))
 }
 
 #-------------------------------------------------------------------------------------------
 # Extract posterior vote share estimates
 
 softmax <- function(x) exp(x) / sum(exp(x))
-posterior <- extract(model_fit)
+posterior <- extract(model_fit_wales)
 
-vote_share_draws <- posterior$a[, , stan_data_wales$T] |>
+vote_share_draws_wales <- posterior$a[, , stan_data_wales$T] |>
   apply(1, softmax) |>
   t()
-colnames(vote_share_draws) <- party_cols_wales
+colnames(vote_share_draws_wales) <- party_cols_wales
 
 # 95% credible intervals per party
-summary_table_wales <- as_tibble(vote_share_draws) |>
+summary_table_wales <- as_tibble(vote_share_draws_wales) |>
   pivot_longer(everything(), names_to = "Party", values_to = "Vote_Share") |>
   group_by(Party) |>
   summarise(
@@ -129,5 +129,3 @@ summary_table_wales <- as_tibble(vote_share_draws) |>
     upper_95 = quantile(Vote_Share, 0.975),
     .groups  = "drop"
   )
-summary_table_wales
-

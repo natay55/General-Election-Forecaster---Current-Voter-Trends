@@ -34,28 +34,6 @@ FIXED_CONTEXT_VARS_WALES <- c(
   "index_dep_wales"                     # Index of Multiple Deprivation
 )
 
-INTERACTION_MAP_WALES <- list(
-  
-  "Labour" = c(
-    "housing_tenure_:private_rented_pct",
-    "p_education_level:index_dep_wales"
-  ),
-  "Plaid Cymru" = c(
-    "p_education_level:welsh_speaking"
-  ),
-  "Brexit Party/Reform UK" = c(
-    "p_education_level:remain",
-    "ageGroup:index_dep_wales"
-  ),
-  "Conservative" = c(
-    "ageGroup:mortgage_owner_loan_pct"
-  ),
-  "Liberal Democrat" = c(
-    "p_education_level:remain",
-    "ageGroup:con_pct"
-  )
-)
-
 high_profile <- list(
   "rhondda and ogmore" = "Labour",       #Chris Bryant
   "ceredigion preseli" = "Plaid Cymru",  # Ben Lake
@@ -103,12 +81,10 @@ if (file.exists(here("data","Models","Wales","party_models_wales.rds"))) {
       party_context_vars_wales <- setdiff(party_context_vars_wales, "is_high_profile")
     }
     
-    interaction_vars_wales <- INTERACTION_MAP_WALES[[party]]
     
     fixed_effects_wales <- c(
       FIXED_DEMO_VARS_WALES,
-      party_context_vars_wales,
-      interaction_vars_wales
+      party_context_vars_wales
     )
     fixed_effects_wales <- fixed_effects_wales[!is.na(fixed_effects_wales)]
     

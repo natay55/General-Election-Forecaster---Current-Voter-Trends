@@ -34,24 +34,6 @@ FIXED_CONTEXT_VARS_SCOTLAND <- c(
   "dep_index"                # Index of Multiple Deprivation
 )
 
-INTERACTION_MAP_SCOTTISH <- list(
-  "Labour" = c(
-    "ageGroup_scot:p_education_level",
-    "p_education_level:Con_pc"
-  ),
-  "Conservative" = c(
-    "ageGroup_scot:p_education_level",
-    "past_vote_2024:scot_rem"
-  ),
-  "Liberal Democrat" = c(
-    "p_education_level:Con_pc"
-  ),
-  "Scottish National Party (SNP)" = c(
-    "ageGroup_scot:p_education_level",
-    "past_vote_2024:scot_rem"
-  )
-)
-
 high_profile <- list(
   "edinburgh south"                         = "Labour",                         # Ian Murray
   "lothian east"                            = "Labour",                         # Douglas Alexander
@@ -115,19 +97,9 @@ if (file.exists(PARTY_MODELS_SCOTLAND_PATH)) {
       party_context_vars <- setdiff(party_context_vars, "is_incumbent")
     }
     
-    interaction_vars <- INTERACTION_MAP_SCOTTISH[[party]]
-    
-    if (!has_hp_seats) {
-      interaction_vars <- interaction_vars[!grepl("is_high_profile", interaction_vars)]
-    }
-    if (sum(party_data$is_incumbent, na.rm = TRUE) == 0) {
-      interaction_vars <- interaction_vars[!grepl("is_incumbent", interaction_vars)]
-    }
-    
     fixed_effects <- c(
       FIXED_DEMO_VARS_SCOTLAND,
-      party_context_vars,
-      interaction_vars
+      party_context_vars
     )
     fixed_effects <- fixed_effects[!is.na(fixed_effects)]
     

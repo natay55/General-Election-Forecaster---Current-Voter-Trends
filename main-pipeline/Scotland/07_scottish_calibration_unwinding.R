@@ -40,11 +40,6 @@ logit_shift_scottish <- function(party) {
   mrp_val <- mrp_national_scottish |> filter(party == !!party) |> pull(mrp_mean)
   diff <- abs(mrp_val - target)
   
-  # Return raw unadjusted shares if difference is under 0.05
-  if (is.na(diff) || diff < 0.05) {
-    return(constituency_vote_shares_scotland |> filter(party == !!party))
-  }
-  
   raw_votes_target <- constituency_vote_shares_scotland |> 
     filter(party == !!party) |> 
     pull(vote_share)
@@ -133,13 +128,7 @@ constituency_unwound_scotland <- constituency_vote_shares_calibrated_scotland |>
     historical_sd = party_sd_map_scotland[[cur_group()$party]],
     current_sd    = sd(vote_share),
     scaling_ratio = historical_sd / current_sd,
-    vote_share    = case_when(
-      # We remove the condition of scaling_ratio >= 1 for Scotland because the current projections are vastly different to the last GE
-      diff < 0.05 ~
-        national_mean + (vote_share - national_mean) * scaling_ratio,
-      TRUE ~
-        vote_share
-    ),
+    vote_share    = national_mean + (vote_share - national_mean) * scaling_ratio,
     vote_share    = pmax(vote_share, 0)
   ) |>
   ungroup() |>

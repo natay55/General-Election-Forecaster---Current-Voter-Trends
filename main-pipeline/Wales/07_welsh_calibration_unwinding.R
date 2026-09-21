@@ -36,13 +36,8 @@ logit_shift_wales <- function(party) {
   target <- target_proportion_wales[[party]]
   
   # Calculate absolute difference between MRP mean and aggregator mean
-  mrp_val <- mrp_national_wales |> filter(party == !!party) |> pull(mrp_mean) # FIX: was mrp_national
+  mrp_val <- mrp_national_wales |> filter(party == !!party) |> pull(mrp_mean)
   diff <- abs(mrp_val - target)
-  
-  # Return raw unadjusted shares if the difference is under 0.05
-  if (is.na(diff) || diff < 0.05) {
-    return(constituency_vote_shares_wales |> filter(party == !!party))
-  }
   
   raw_votes_target <- constituency_vote_shares_wales |> 
     filter(party == !!party) |> 
@@ -120,19 +115,14 @@ party_sd_map_wales <- list( # FIX: was party_sd_map
 )
 
 constituency_unwound_wales <- constituency_vote_shares_calibrated_wales |>
-  left_join(diff_table_wales |> select(party, diff), by = "party") |> # FIX: was diff_table
+  left_join(diff_table_wales |> select(party, diff), by = "party") |>
   group_by(party) |>
   mutate(
     national_mean = mean(vote_share),
     historical_sd = party_sd_map_wales[[cur_group()$party]],
     current_sd    = sd(vote_share),
     scaling_ratio = historical_sd / current_sd,
-    vote_share    = case_when(
-      diff < 0.05 & scaling_ratio >= 1 ~ 
-        national_mean + (vote_share - national_mean) * scaling_ratio,
-      TRUE ~
-        vote_share
-    ),
+    vote_share    = national_mean + (vote_share - national_mean) * scaling_ratio,
     vote_share    = pmax(vote_share, 0)
   ) |>
   ungroup() |>

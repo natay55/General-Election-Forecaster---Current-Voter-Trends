@@ -38,11 +38,6 @@ logit_shift <- function(party = party) {
   mrp_val <- mrp_national |> filter(party == !!party) |> pull(mrp_mean)
   diff <- abs(mrp_val - target)
   
-  # Return raw unadjusted shares if the difference is under 0.05
-  if (is.na(diff) || diff < 0.05) {
-    return(constituency_vote_shares |> filter(party == !!party))
-  }
-  
   raw_votes_target <- constituency_vote_shares |> 
     filter(party == !!party) |> 
     pull(vote_share)
@@ -123,13 +118,7 @@ constituency_unwound <- constituency_vote_shares_calibrated |>
     historical_sd = party_sd_map[[cur_group()$party]],
     current_sd    = sd(vote_share),
     scaling_ratio = historical_sd / current_sd,
-    vote_share    = case_when(
-      # We set the condition for scaling ratio >= 1 since the current projections are similar to the performance of the last GE
-      diff < 0.05 & scaling_ratio >= 1 ~
-        national_mean + (vote_share - national_mean) * scaling_ratio,
-      TRUE ~
-        vote_share
-    ),
+    vote_share    = national_mean + (vote_share - national_mean) * scaling_ratio,
     vote_share = pmax(vote_share, 0)
   ) |>
   ungroup() |>
