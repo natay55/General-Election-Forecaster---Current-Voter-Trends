@@ -29,7 +29,7 @@ raw_scot <- fetch_with_retry_scot("https://britain.votes.now/data/polls/sct_wmc.
 scot_polls <- raw_scot |>
   as_tibble() |>
   mutate(date = as.Date(date)) |>
-  filter(date >= as.Date("2024-07-04")) |>
+  filter(date >= as.Date("2026-06-01")) |>
   filter(!map_lgl(polls, ~ length(.x) == 0)) |>
   mutate(poll_data = map(polls, ~ as_tibble(.x))) |>
   unnest(poll_data) |>
