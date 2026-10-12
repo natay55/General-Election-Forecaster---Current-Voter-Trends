@@ -32,7 +32,7 @@ raw_gb_bv <- fetch_with_retry("https://britain.votes.now/data/polls/gb.json")
 english_polls <- raw_gb_bv |>
   as_tibble() |>
   mutate(date = as.Date(date)) |>
-  filter(date >= as.Date("2026-06-01")) |>
+  filter(date >= as.Date("2026-06-01")) |> # Just before Makerfield by-election
   filter(!map_lgl(polls, ~ length(.x) == 0)) |>
   mutate(poll_data = map(polls, ~ as_tibble(.x))) |>
   unnest(poll_data) |>
