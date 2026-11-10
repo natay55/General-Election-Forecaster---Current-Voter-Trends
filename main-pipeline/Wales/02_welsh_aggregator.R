@@ -30,7 +30,7 @@ raw_wales <- fetch_with_retry("https://britain.votes.now/data/polls/wls_wmc.json
 wales_polls <- raw_wales |>
   as_tibble() |>
   mutate(date = as.Date(date)) |>
-  filter(date >= as.Date("2024-07-04")) |> 
+  filter(date >= as.Date("2019-12-12")) |> 
   filter(!map_lgl(polls, ~ length(.x) == 0)) |>
   mutate(poll_data = map(polls, ~ as_tibble(.x))) |>
   unnest(poll_data) |>
@@ -50,7 +50,8 @@ wales_polls <- raw_wales |>
     Pollster    = as.integer(factor(pollster)),
     sample_size = 2000L
   ) |>
-  filter(!is.na(polling_dates))
+  filter(!is.na(polling_dates))|>
+  drop_na()
 
 #-------------------------------------------------------------------------------
 #Prep data for Bayesian Aggregation
@@ -69,7 +70,7 @@ y_wales <- clean_data_wales |>
   select(all_of(party_cols_wales), sample_size) |>
   mutate(across(everything(), ~round(. * sample_size))) |>
   select(-sample_size) |>
-  as.matrix()
+  as.matrix() 
 
 #-------------------------------------------------------------------------------
 #Parse data into Stan model

@@ -32,7 +32,7 @@ raw_gb_bv <- fetch_with_retry("https://britain.votes.now/data/polls/gb.json")
 english_polls <- raw_gb_bv |>
   as_tibble() |>
   mutate(date = as.Date(date)) |>
-  filter(date >= as.Date("2024-07-04")) |>
+  filter(date >= as.Date("2017-06-08")) |>
   filter(!map_lgl(polls, ~ length(.x) == 0)) |>
   mutate(poll_data = map(polls, ~ as_tibble(.x))) |>
   unnest(poll_data) |>
@@ -51,7 +51,8 @@ english_polls <- raw_gb_bv |>
     Pollster    = as.integer(factor(pollster)),
     sample_size = 2000L #Sample size missing for all polls, so assume 2000 were surveyed
   ) |>
-  filter(!is.na(polling_dates))
+  filter(!is.na(polling_dates))|>
+  drop_na()
 
 clean_data <- english_polls |>
   mutate(
